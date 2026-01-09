@@ -26,25 +26,15 @@ use Survos\MeiliBundle\Metadata\MeiliIndex;
 final class Obj
 {
 	public const FILTERABLE_FIELDS = [
-		'table',
+		'tableField',
 		'access',
 		'status',
 		'primaryDateSet',
 		'sourceSet',
-		'caObjectRepresentationsMediaSmallUrl',
-		'caObjectRepresentationsMediaMediumUrl',
-		'caObjectRepresentationsMediaOriginalUrl',
-		'georeference',
 		'caPlacesPreferredLabelsName',
-		'caCollectionsPreferredLabelsName',
 		'RHSKeywordsList',
 		'lcshTerms',
 		'caEntitiesPreferredLabelsDisplayname',
-		'objectDate',
-		'internalNotes',
-		'externalLink',
-		'dimensions',
-		'rightsSet',
 	];
 
 	public const SORTABLE_FIELDS = ['id'];
@@ -73,7 +63,7 @@ final class Obj
 	 * @stats total=2744, nulls=0, distinct=1
 	 */
 	#[Column(length: 10, nullable: true)]
-	public ?string $table = null;
+	public ?string $tableField = null;
 
 	/**
 	 * Profile field "preferred_labels.name"

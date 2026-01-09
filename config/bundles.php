@@ -22,4 +22,5 @@ return [
     Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
     Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
+    Symfony\UX\Chartjs\ChartjsBundle::class => ['all' => true],
 ];

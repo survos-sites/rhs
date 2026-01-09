@@ -13,4 +13,4 @@ import './styles/app.css';
 import 'instantsearch.css/themes/algolia.min.css';
 
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+console.warn('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
