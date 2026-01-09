@@ -411,7 +411,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: true
  *     },
  *     lock?: bool|string|array{ // Lock configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         resources?: array<string, string|list<scalar|null|Param>>,
  *     },
  *     semaphore?: bool|string|array{ // Semaphore configuration
@@ -638,7 +638,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     uid?: bool|array{ // Uid configuration
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *         default_uuid_version?: 7|6|4|1|Param, // Default: 7
  *         name_based_uuid_version?: 5|3|Param, // Default: 5
  *         name_based_uuid_namespace?: scalar|null|Param,
@@ -957,13 +957,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *     },
  *     html?: bool|array{
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *     },
  *     markdown?: bool|array{
  *         enabled?: bool|Param, // Default: false
  *     },
  *     intl?: bool|array{
- *         enabled?: bool|Param, // Default: false
+ *         enabled?: bool|Param, // Default: true
  *     },
  *     cssinliner?: bool|array{
  *         enabled?: bool|Param, // Default: false
@@ -1455,6 +1455,98 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     generate_final_classes?: bool|Param, // Default: true
  *     generate_final_entities?: bool|Param, // Default: false
  * }
+ * @psalm-type TwigComponentConfig = array{
+ *     defaults?: array<string, string|array{ // Default: ["__deprecated__use_old_naming_behavior"]
+ *         template_directory?: scalar|null|Param, // Default: "components"
+ *         name_prefix?: scalar|null|Param, // Default: ""
+ *     }>,
+ *     anonymous_template_directory?: scalar|null|Param, // Defaults to `components`
+ *     profiler?: bool|array{ // Enables the profiler for Twig Component
+ *         enabled?: bool|Param, // Default: "%kernel.debug%"
+ *         collect_components?: bool|Param, // Collect components instances // Default: true
+ *     },
+ *     controllers_json?: scalar|null|Param, // Deprecated: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0. // Default: null
+ * }
+ * @psalm-type SurvosEzConfig = array{
+ *     enabled?: bool|Param, // Default: true
+ * }
+ * @psalm-type SurvosImportConfig = array{
+ *     dir?: scalar|null|Param, // The default directory for data files // Default: "data"
+ * }
+ * @psalm-type SurvosJsonlConfig = array<mixed>
+ * @psalm-type SurvosCoreConfig = array{
+ *     enabled?: bool|Param, // Default: true
+ *     dd?: bool|Param, // Default: true
+ * }
+ * @psalm-type SurvosMeiliConfig = array{
+ *     core_name?: scalar|null|Param, // Default: "core"
+ *     enabled?: bool|Param, // Default: true
+ *     host?: scalar|null|Param, // Default: "%env(default::MEILI_SERVER)%"
+ *     apiKey?: scalar|null|Param, // Default: "%env(default::MEILI_ADMIN_KEY)%"
+ *     transport?: scalar|null|Param, // Default: "%env(default::MEILI_TRANSPORT)%"
+ *     searchKey?: scalar|null|Param, // Default: "%env(default::MEILI_SEARCH_KEY)%"
+ *     meiliPrefix?: scalar|null|Param, // Default: "%env(default::MEILI_PREFIX)%"
+ *     translationStyle?: scalar|null|Param, // Default: "simple"
+ *     passLocale?: bool|Param, // Default: false
+ *     multiLingual?: bool|Param, // turn on multi-lingual indexing // Default: false
+ *     maxValuesPerFacet?: int|Param, // Default: 1000
+ *     tools?: list<array{ // Default: []
+ *         label: scalar|null|Param,
+ *         url: scalar|null|Param,
+ *     }>,
+ *     embedders?: array<string, array{ // Default: []
+ *         source: scalar|null|Param,
+ *         model: scalar|null|Param,
+ *         apiKey?: scalar|null|Param, // Default: null
+ *         for?: scalar|null|Param, // Default: null
+ *         template?: scalar|null|Param, // Default: null
+ *         documentTemplateMaxBytes?: int|Param, // Default: 4096
+ *         maxTokensPerDoc?: int|Param, // Default: null
+ *         examples?: list<scalar|null|Param>,
+ *     }>,
+ *     pricing?: array{
+ *         embedders?: array<string, scalar|null|Param>,
+ *     },
+ *     meili_settings?: array{
+ *         typoTolerance?: array{
+ *             enabled?: bool|Param, // Default: true
+ *             oneTypo?: int|Param, // Default: 5
+ *             twoTypos?: int|Param, // Default: 9
+ *             disableOnWords?: list<scalar|null|Param>,
+ *             disableOnAttributes?: list<scalar|null|Param>,
+ *             disableOnNumbers?: bool|Param, // Default: false
+ *         },
+ *         faceting?: array{
+ *             maxValuesPerFacet?: int|Param, // Default: 1000
+ *             sortFacetValuesBy?: array<string, scalar|null|Param>,
+ *         },
+ *         pagination?: array{
+ *             maxTotalHits?: int|Param, // Default: 1000
+ *         },
+ *         facetSearch?: bool|Param, // Default: true
+ *         prefixSearch?: scalar|null|Param, // Default: "indexingTime"
+ *     },
+ *     entity_dirs?: list<scalar|null|Param>,
+ * }
+ * @psalm-type SurvosCodeConfig = array{
+ *     base_layout?: scalar|null|Param, // Default: "base.html.twig"
+ * }
+ * @psalm-type UxIconsConfig = array{
+ *     icon_dir?: scalar|null|Param, // The local directory where icons are stored. // Default: "%kernel.project_dir%/assets/icons"
+ *     default_icon_attributes?: array<string, scalar|null|Param>,
+ *     icon_sets?: array<string, array{ // the icon set prefix (e.g. "acme") // Default: []
+ *         path?: scalar|null|Param, // The local icon set directory path. (cannot be used with 'alias')
+ *         alias?: scalar|null|Param, // The remote icon set identifier. (cannot be used with 'path')
+ *         icon_attributes?: array<string, scalar|null|Param>,
+ *     }>,
+ *     aliases?: array<string, string|Param>,
+ *     iconify?: bool|array{ // Configuration for the remote icon service.
+ *         enabled?: bool|Param, // Default: true
+ *         on_demand?: bool|Param, // Whether to download icons "on demand". // Default: true
+ *         endpoint?: scalar|null|Param, // The endpoint for the Iconify icons API. // Default: "https://api.iconify.design"
+ *     },
+ *     ignore_not_found?: bool|Param, // Ignore error when an icon is not found. Set to 'true' to fail silently. // Default: false
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1468,6 +1560,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     twig_extra?: TwigExtraConfig,
  *     security?: SecurityConfig,
  *     monolog?: MonologConfig,
+ *     twig_component?: TwigComponentConfig,
+ *     survos_ez?: SurvosEzConfig,
+ *     survos_import?: SurvosImportConfig,
+ *     survos_jsonl?: SurvosJsonlConfig,
+ *     survos_core?: SurvosCoreConfig,
+ *     survos_meili?: SurvosMeiliConfig,
+ *     ux_icons?: UxIconsConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1484,6 +1583,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
  *         maker?: MakerConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         survos_ez?: SurvosEzConfig,
+ *         survos_import?: SurvosImportConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
+ *         survos_core?: SurvosCoreConfig,
+ *         survos_meili?: SurvosMeiliConfig,
+ *         survos_code?: SurvosCodeConfig,
+ *         ux_icons?: UxIconsConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1498,6 +1605,13 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         survos_ez?: SurvosEzConfig,
+ *         survos_import?: SurvosImportConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
+ *         survos_core?: SurvosCoreConfig,
+ *         survos_meili?: SurvosMeiliConfig,
+ *         ux_icons?: UxIconsConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1513,6 +1627,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         twig_extra?: TwigExtraConfig,
  *         security?: SecurityConfig,
  *         monolog?: MonologConfig,
+ *         twig_component?: TwigComponentConfig,
+ *         survos_ez?: SurvosEzConfig,
+ *         survos_import?: SurvosImportConfig,
+ *         survos_jsonl?: SurvosJsonlConfig,
+ *         survos_core?: SurvosCoreConfig,
+ *         survos_meili?: SurvosMeiliConfig,
+ *         survos_code?: SurvosCodeConfig,
+ *         ux_icons?: UxIconsConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

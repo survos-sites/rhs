@@ -13,4 +13,13 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     Symfony\Bundle\MonologBundle\MonologBundle::class => ['all' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
+    Symfony\UX\TwigComponent\TwigComponentBundle::class => ['all' => true],
+    EasyCorp\Bundle\EasyAdminBundle\EasyAdminBundle::class => ['all' => true],
+    Survos\EzBundle\SurvosEzBundle::class => ['all' => true],
+    Survos\ImportBundle\SurvosImportBundle::class => ['all' => true],
+    Survos\JsonlBundle\SurvosJsonlBundle::class => ['all' => true],
+    Survos\CoreBundle\SurvosCoreBundle::class => ['all' => true],
+    Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
+    Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
+    Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
 ];

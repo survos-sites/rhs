@@ -19,5 +19,11 @@ services:
     App\:
         resource: '../src/'
 
+    App\Service\CollectiveAccessGraphQLService:
+        arguments:
+            $defaultBaseUrl: '%env(default::CA_BASE_URL)%'
+            $defaultUsername: '%env(default::CA_USERNAME)%'
+            $defaultPassword: '%env(default::CA_PASSWORD)%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
