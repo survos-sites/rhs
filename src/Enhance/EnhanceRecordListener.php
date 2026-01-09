@@ -28,6 +28,7 @@ class EnhanceRecordListener
     {
         $record = $event->row;
         $record = SurvosUtils::removeNullsAndEmptyArrays($record);
+
         dd($record, $event);
 //        foreach ($event->tags as $tag)
         {

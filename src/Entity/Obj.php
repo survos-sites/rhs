@@ -26,7 +26,7 @@ use Survos\MeiliBundle\Metadata\MeiliIndex;
 final class Obj
 {
 	public const FILTERABLE_FIELDS = [
-		'tableField',
+        'typeId',
 		'access',
 		'status',
 		'primaryDateSet',

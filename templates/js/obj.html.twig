@@ -1,0 +1,170 @@
+{# Generated automatically from JSONL profile + Meilisearch settings.
+   Safe to edit; re-generating will overwrite.
+
+   Meilisearch settings:
+{
+    "displayedAttributes": [
+        "*"
+    ],
+    "searchableAttributes": [
+        "preferredLabelsName",
+        "description"
+    ],
+    "filterableAttributes": [
+        "typeId",
+        "access",
+        "status",
+        "primaryDateSet",
+        "sourceSet",
+        "caPlacesPreferredLabelsName",
+        "RHSKeywordsList",
+        "lcshTerms",
+        "caEntitiesPreferredLabelsDisplayname"
+    ],
+    "sortableAttributes": [
+        "id"
+    ],
+    "rankingRules": [
+        "words",
+        "typo",
+        "proximity",
+        "attribute",
+        "sort",
+        "exactness"
+    ],
+    "stopWords": [],
+    "nonSeparatorTokens": [],
+    "separatorTokens": [],
+    "dictionary": [],
+    "synonyms": {},
+    "distinctAttribute": null,
+    "proximityPrecision": "byWord",
+    "typoTolerance": {
+        "enabled": true,
+        "minWordSizeForTypos": {
+            "oneTypo": 5,
+            "twoTypos": 9
+        },
+        "disableOnWords": [],
+        "disableOnAttributes": [],
+        "disableOnNumbers": false
+    },
+    "faceting": {
+        "maxValuesPerFacet": 1000,
+        "sortFacetValuesBy": {
+            "*": "count"
+        }
+    },
+    "pagination": {
+        "maxTotalHits": 1000
+    },
+    "embedders": {},
+    "searchCutoffMs": null,
+    "localizedAttributes": null,
+    "facetSearch": true,
+    "prefixSearch": "indexingTime"
+}
+#}
+
+{% set _config = {"primaryKey":"id","titleField":"idno","descriptionField":"description","imageField":"caObjectRepresentationsMediaSmallUrl","scalarFields":[],"tagFields":["primaryDateSet","sourceSet"],"filterableFields":["access","status","primaryDateSet","sourceSet","caPlacesPreferredLabelsName","RHSKeywordsList","lcshTerms","caEntitiesPreferredLabelsDisplayname"],"labels":{"id":"Id","idno":"Idno","table":"Table","preferredLabelsName":"Preferred Labels Name","typeId":"Type Id","access":"Access","status":"Status","primaryDateSet":"Primary Date Set","sourceSet":"Source Set","caObjectRepresentationsMediaSmallUrl":"Ca Object Representations Media Small Url","caObjectRepresentationsMediaMediumUrl":"Ca Object Representations Media Medium Url","caObjectRepresentationsMediaOriginalUrl":"Ca Object Representations Media Original Url","georeference":"Georeference","caPlacesPreferredLabelsName":"Ca Places Preferred Labels Name","caCollectionsPreferredLabelsName":"Ca Collections Preferred Labels Name","RHS_keywords_list":"R H S Keywords List","lcshTerms":"Lcsh Terms","caEntitiesPreferredLabelsDisplayname":"Ca Entities Preferred Labels Displayname","description":"Description","objectDate":"Object Date","internalNotes":"Internal Notes","externalLink":"External Link","dimensions":"Dimensions","rightsSet":"Rights Set"},"maxLen":100,"maxList":3} %}
+
+{% set pk        = attribute(hit, _config.primaryKey|default('id')) ?? (hit.id ?? null) %}
+{% set titleKey  = _config.titleField|default('title') %}
+{% set descKey   = _config.descriptionField|default(null) %}
+{% set imageKey  = _config.imageField|default(null) %}
+{% set maxLen    = _config.maxLen|default(100) %}
+{% set maxList   = _config.maxList|default(3) %}
+{% set labels    = _config.labels|default({}) %}
+
+{% set highlightedTitle = (hit._highlightResult is defined
+    and attribute(hit._highlightResult, titleKey) is defined
+    and attribute(attribute(hit._highlightResult, titleKey), 'value') is defined)
+    ? attribute(attribute(hit._highlightResult, titleKey), 'value')
+    : null
+%}
+{% set title = highlightedTitle ?? (attribute(hit, titleKey)|default(pk)) %}
+
+{% set description = null %}
+{% if descKey %}
+    {% set highlightedDesc = (hit._highlightResult is defined
+        and attribute(hit._highlightResult, descKey) is defined
+        and attribute(attribute(hit._highlightResult, descKey), 'value') is defined)
+        ? attribute(attribute(hit._highlightResult, descKey), 'value')
+        : null
+    %}
+    {% set rawDesc = attribute(hit, descKey)|default(null) %}
+    {% set description = highlightedDesc ?? rawDesc %}
+{% endif %}
+
+{% set imageUrl = imageKey ? (attribute(hit, imageKey)|default(null)) : null %}
+{% set citation = 'https://ca.rappahannockhistsoc.org/pawtucket/index.php/Detail/objects/' ~ hit.id %}
+
+<div class="card h-100 shadow-sm border-0">
+    <div class="card-body p-3">
+        <div class="d-flex gap-3 mb-2">
+            {% for idx, imageUrl in hit.caObjectRepresentationsMediaMediumUrl %}
+                {% if imageUrl %}
+                    <div xstyle="flex:0 0 96px;">
+                        {% set orig = hit.caObjectRepresentationsMediaOriginalUrl[idx] %}
+                        <a href="{{ citation }}" target="_blank" rel="noopener noreferrer">
+                        <img
+                            src="{{ imageUrl }}"
+                            alt="{{ title|striptags }}"
+                            class="img-fluid rounded"
+                            loading="lazy"
+                            decoding="async"
+                            style="max-height:120px;object-fit:cover;"
+                        >
+                        </a>
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between gap-2 mb-1">
+                    <h5 class="card-title mb-0 text-wrap" style="word-break:break-word;">
+                        {{ title|raw }}
+                    </h5>
+                </div>
+
+                {% if description %}
+                    <p
+                        class="text-body-secondary mb-0"
+                        style="
+                            display:-webkit-box;
+                            -webkit-line-clamp:3;
+                            -webkit-box-orient:vertical;
+                            overflow:hidden;
+                            text-overflow:ellipsis;
+                        "
+                    >
+                        {{ description|raw }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div class="d-flex flex-wrap align-items-center gap-2 small text-body-secondary">
+            {% if pk is not null %}
+                <span>{{ _config.primaryKey }}: {{ pk }}</span>
+            {% endif %}
+        </div>
+
+        <a href="{{ citation }}" target="_blank" rel="noopener noreferrer">
+            On CA
+        </a>
+
+
+        <button
+            {{ stimulus_action(globals._sc_modal, 'modal') }}
+            data-hit-id="{{ pk }}"
+            class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1"
+        >
+            {{ ux_icon('json')|raw }}
+            <span>Details</span>
+        </button>
+    </div>
+</div>

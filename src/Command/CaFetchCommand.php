@@ -11,6 +11,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Attribute\Option;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 #[AsCommand('ca:fetch', 'Fetch objects from CollectiveAccess GraphQL API and write to JSONL')]
 final class CaFetchCommand
@@ -57,6 +58,7 @@ final class CaFetchCommand
         // Media
         'ca_object_representations.media.small.url',
         'ca_object_representations.media.medium.url',
+        'ca_object_representations.media.large.url',
         'ca_object_representations.media.original.url',
 
         // Links
@@ -71,13 +73,13 @@ final class CaFetchCommand
     public function __invoke(
         SymfonyStyle $io,
         #[Argument('Base URL of CollectiveAccess instance (default: CA_BASE_URL)')]
-        string $baseUrl = '',
+        ?string $baseUrl = null,
         #[Argument('Output JSONL file path')]
-        string $output = 'var/ca_objects.jsonl',
+        string $output = 'data/ca_objects.jsonl',
         #[Option('CA username/email (default: CA_USERNAME)')]
-        string $username = '',
+        ?string $username=null,
         #[Option('CA password (default: CA_PASSWORD)')]
-        string $password = '',
+        ?string $password=null,
         #[Option('Records per page')]
         int $limit = 100,
         #[Option('Maximum total records (0 = all)')]
@@ -87,8 +89,9 @@ final class CaFetchCommand
         #[Option('Bundles to fetch (comma-separated, empty = defaults)')]
         string $bundles = '',
     ): int {
-        $io->title('CollectiveAccess GraphQL Fetcher');
+        // @todo: move to the service.
 
+        $io->title('CollectiveAccess GraphQL Fetcher ' . $baseUrl . '=> ' . $output);
         // Parse bundles
         $bundleList = $bundles !== ''
             ? array_map('trim', explode(',', $bundles))
@@ -98,6 +101,8 @@ final class CaFetchCommand
 
         // Get total count first
         $io->section('Fetching object count...');
+
+        $this->collectiveAccess->auth();
 
         try {
             $countResult = $this->collectiveAccess->searchObjects(
@@ -171,7 +176,8 @@ final class CaFetchCommand
             }
 
             foreach ($records as $record) {
-                $writer->write($this->flattenRecord($record));
+                $obj = $this->flattenRecord($record);
+                $writer->write($obj);
                 $fetched++;
                 $progressBar->advance();
 

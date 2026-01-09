@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Obj;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Survos\EzBundle\Controller\AbstractEzCrudController;
 use Survos\EzBundle\Field\LinkedTextField;
 
@@ -22,9 +24,12 @@ final class ObjCrudController extends AbstractEzCrudController
 
     protected function preferredFields(string $pageName): iterable
     {
+        yield ArrayField::new('caObjectRepresentationsMediaSmallUrl');
         if ($pageName !== Crud::PAGE_INDEX) {
             return [];
         }
+
+        return [];
 
         yield LinkedTextField::new('id', 'Id')
             ->setRoute(self::SHOW_ROUTE, 'id', 'id');

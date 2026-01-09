@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class CollectiveAccessGraphQLService
@@ -16,10 +17,16 @@ final class CollectiveAccessGraphQLService
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly ?string $defaultBaseUrl = null,
-        private readonly ?string $defaultUsername = null,
-        private readonly ?string $defaultPassword = null,
+        #[Autowire('%env(CA_SERVER)%')] private readonly ?string $baseUrl = null,
+        #[Autowire('%env(CA_USERNAME)%')] private readonly ?string $username = null,
+        #[Autowire('%env(CA_PASSWORD)%')] private readonly ?string $password = null,
+
     ) {
+    }
+
+    public function auth(): string
+    {
+        return $this->getJwt($this->baseUrl, $this->username, $this->password);
     }
 
     public function getObjectCount(
@@ -51,9 +58,7 @@ final class CollectiveAccessGraphQLService
         ?string $username = null,
         ?string $password = null,
     ): array {
-        $baseUrl = $this->resolveBaseUrl($baseUrl);
-        $jwt = $this->getJwt($baseUrl, $username, $password);
-
+        $jwt = $this->auth();
         $bundlesJson = json_encode(array_values($bundles), JSON_THROW_ON_ERROR);
 
         $query = sprintf(
@@ -65,7 +70,7 @@ final class CollectiveAccessGraphQLService
         );
 
         return $this->request(
-            baseUrl: $baseUrl,
+            baseUrl: $this->baseUrl,
             endpoint: '/service/Search',
             headers: [
                 'Content-Type' => 'application/json',
@@ -75,10 +80,8 @@ final class CollectiveAccessGraphQLService
         );
     }
 
-    private function getJwt(string $baseUrl, ?string $username, ?string $password): string
+    private function getJwt(string $baseUrl, string $username, string $password): string
     {
-        $username = $this->resolveUsername($username);
-        $password = $this->resolvePassword($password);
 
         $context = sha1($baseUrl . "\0" . $username . "\0" . $password);
 
@@ -128,11 +131,7 @@ final class CollectiveAccessGraphQLService
     private function resolveBaseUrl(?string $baseUrl): string
     {
         $baseUrl = $baseUrl ?? '';
-        if ($baseUrl === '') {
-            $baseUrl = $this->getEnv('CA_BASE_URL') ?? ($this->defaultBaseUrl ?? '');
-        }
-
-        if ($baseUrl === '') {
+        if (!$baseUrl) {
             throw new \InvalidArgumentException('CollectiveAccess base URL must be provided via argument or CA_BASE_URL');
         }
 
@@ -142,11 +141,7 @@ final class CollectiveAccessGraphQLService
     private function resolveUsername(?string $username): string
     {
         $username = $username ?? '';
-        if ($username === '') {
-            $username = $this->getEnv('CA_USERNAME') ?? ($this->defaultUsername ?? '');
-        }
-
-        if ($username === '') {
+        if (!$username) {
             throw new \InvalidArgumentException('CollectiveAccess username must be provided via --username or CA_USERNAME');
         }
 
