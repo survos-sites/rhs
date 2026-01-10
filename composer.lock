@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7db26e7cdec432cc55ece369d84b82f8",
+    "content-hash": "b8c84816dfda0b2c0578ac5fbe77c64e",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -1698,6 +1698,50 @@
                 }
             ],
             "time": "2026-01-02T08:56:05+00:00"
+        },
+        {
+            "name": "museado/data-bundle",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/museado/data-bundle.git",
+                "reference": "4499951cb705854bbb0ebb13241e2b3e0e4a6266"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/museado/data-bundle/zipball/4499951cb705854bbb0ebb13241e2b3e0e4a6266",
+                "reference": "4499951cb705854bbb0ebb13241e2b3e0e4a6266",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.4",
+                "symfony/config": "^7.4 || ^8.0",
+                "symfony/console": "^8.0",
+                "symfony/dependency-injection": "^7.4 || ^8.0",
+                "symfony/filesystem": "^7.4 || ^8.0",
+                "symfony/framework-bundle": "^7.4 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^12.0",
+                "roave/security-advisories": "dev-latest",
+                "symfony/yaml": "^8.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "Museado\\DataBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Shared data directory conventions and path utilities for Museado ecosystem (APP_DATA_DIR).",
+            "support": {
+                "issues": "https://github.com/museado/data-bundle/issues",
+                "source": "https://github.com/museado/data-bundle/tree/1.0.0"
+            },
+            "time": "2026-01-10T10:42:30+00:00"
         },
         {
             "name": "nyholm/psr7",

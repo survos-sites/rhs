@@ -1547,6 +1547,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     },
  *     ignore_not_found?: bool|Param, // Ignore error when an icon is not found. Set to 'true' to fail silently. // Default: false
  * }
+ * @psalm-type MuseadoDataConfig = array{
+ *     data_dir?: scalar|null|Param, // Default: "%env(APP_DATA_DIR)%"
+ *     dataset_root?: scalar|null|Param, // Default: "data"
+ *     pixie_root?: scalar|null|Param, // Default: "pixie"
+ *     runs_root?: scalar|null|Param, // Default: "runs"
+ *     cache_root?: scalar|null|Param, // Default: "cache"
+ *     default_object_filename?: scalar|null|Param, // Default: "obj.jsonl"
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1567,6 +1575,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_core?: SurvosCoreConfig,
  *     survos_meili?: SurvosMeiliConfig,
  *     ux_icons?: UxIconsConfig,
+ *     museado_data?: MuseadoDataConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1591,6 +1600,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_code?: SurvosCodeConfig,
  *         ux_icons?: UxIconsConfig,
+ *         museado_data?: MuseadoDataConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1612,6 +1622,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_core?: SurvosCoreConfig,
  *         survos_meili?: SurvosMeiliConfig,
  *         ux_icons?: UxIconsConfig,
+ *         museado_data?: MuseadoDataConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1635,6 +1646,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_meili?: SurvosMeiliConfig,
  *         survos_code?: SurvosCodeConfig,
  *         ux_icons?: UxIconsConfig,
+ *         museado_data?: MuseadoDataConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

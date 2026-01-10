@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Service\AppService;
 use App\Service\CollectiveAccessGraphQLService;
+use Museado\DataBundle\Service\DataPaths;
 use Survos\JsonlBundle\IO\JsonlWriter;
 use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -67,29 +69,37 @@ final class CaFetchCommand
 
     public function __construct(
         private readonly CollectiveAccessGraphQLService $collectiveAccess,
+        private readonly AppService $appService,
+        private DataPaths $dataPaths,
     ) {
     }
 
     public function __invoke(
         SymfonyStyle $io,
         #[Argument('Base URL of CollectiveAccess instance (default: CA_BASE_URL)')]
-        ?string $baseUrl = null,
-        #[Argument('Output JSONL file path')]
-        string $output = 'data/ca_objects.jsonl',
+        ?string      $baseUrl = null,
+        #[Argument('Output JSONL file path, defaults to $rawDir from datapaths')]
+        ?string      $output = null,
         #[Option('CA username/email (default: CA_USERNAME)')]
-        ?string $username=null,
+        ?string      $username=null,
         #[Option('CA password (default: CA_PASSWORD)')]
-        ?string $password=null,
+        ?string      $password=null,
         #[Option('Records per page')]
-        int $limit = 100,
+        int          $perPage = 100,
+        #[Option('Max total records')]
+        int          $limit = 100,
         #[Option('Maximum total records (0 = all)')]
-        int $max = 0,
+        int          $max = 0,
         #[Option('Search query')]
-        string $search = '*',
+        string       $search = '*',
         #[Option('Bundles to fetch (comma-separated, empty = defaults)')]
-        string $bundles = '',
+        string       $bundles = '',
     ): int {
-        // @todo: move to the service.
+
+        $this->dataPaths->ensureRawDir(AppService::DATASET_KEY);
+        $rawDir = $this->dataPaths->rawDir(AppService::DATASET_KEY);
+        $output ??= $rawDir . '/ca-objects.jsonl';
+        // @todo: handle restart
 
         $io->title('CollectiveAccess GraphQL Fetcher ' . $baseUrl . '=> ' . $output);
         // Parse bundles
@@ -103,7 +113,6 @@ final class CaFetchCommand
         $io->section('Fetching object count...');
 
         $this->collectiveAccess->auth();
-
         try {
             $countResult = $this->collectiveAccess->searchObjects(
                 search: $search,
@@ -136,6 +145,9 @@ final class CaFetchCommand
         $fetchCount = $max > 0 ? min($max, $totalCount) : $totalCount;
         $io->info(sprintf('Will fetch %d objects', $fetchCount));
 
+        $this->dataPaths->ensureRawDir(AppService::DATASET_KEY);
+        $rawDir = $this->dataPaths->rawDir(AppService::DATASET_KEY);
+        $output ??= $rawDir . '/ca-objects.jsonl';
         // Open JSONL writer
         $writer = JsonlWriter::open($output);
 
@@ -145,7 +157,7 @@ final class CaFetchCommand
         $progressBar->start();
 
         while ($fetched < $fetchCount) {
-            $batchLimit = min($limit, $fetchCount - $fetched);
+            $batchLimit = min($perPage, $fetchCount - $fetched);
 
             try {
                 $result = $this->collectiveAccess->searchObjects(
@@ -184,6 +196,10 @@ final class CaFetchCommand
                 if ($fetched >= $fetchCount) {
                     break;
                 }
+
+            }
+            if ($fetched > $limit) {
+                break;
             }
 
             $start += $batchLimit;
