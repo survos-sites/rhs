@@ -25,4 +25,5 @@ return [
     Symfony\UX\Chartjs\ChartjsBundle::class => ['all' => true],
     Museado\DataBundle\MuseadoDataBundle::class => ['all' => true],
     Survos\DeploymentBundle\SurvosDeploymentBundle::class => ['dev' => true, 'test' => true],
+    Survos\MediaBundle\SurvosMediaBundle::class => ['all' => true],
 ];

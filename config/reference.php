@@ -1558,6 +1558,33 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SurvosDeploymentConfig = array{
  *     enabled?: bool|Param, // Default: true
  * }
+ * @psalm-type SurvosMediaConfig = array{
+ *     default_locale?: scalar|null|Param, // Default: "en"
+ *     cache_ttl?: scalar|null|Param, // Default: 3600
+ *     sais_integration?: bool|Param, // Default: true
+ *     imgproxy?: array{
+ *         base_url?: scalar|null|Param, // Default: "https://images.survos.com"
+ *         key?: scalar|null|Param, // Default: "%env(IMGPROXY_KEY)%"
+ *         salt?: scalar|null|Param, // Default: "%env(IMGPROXY_SALT)%"
+ *     },
+ *     media_server?: array{
+ *         host?: scalar|null|Param, // Default: "https://media.wip"
+ *         apiKey?: scalar|null|Param, // Default: null
+ *         resize_path?: scalar|null|Param, // Default: "/media/{preset}/{id}"
+ *     },
+ *     presets?: array<string, array{ // Default: {"small":{"resize":"fill","width":192,"height":192},"medium":{"resize":"fit","width":400,"height":400},"large":{"resize":"fit","width":800,"height":800}}
+ *         resize?: scalar|null|Param, // Default: "fit"
+ *         width: int|Param,
+ *         height: int|Param,
+ *     }>,
+ *     providers?: array<string, array{ // Default: []
+ *         enabled?: bool|Param, // Default: true
+ *         api_key?: scalar|null|Param,
+ *         api_secret?: scalar|null|Param,
+ *         access_token?: scalar|null|Param,
+ *         options?: list<mixed>,
+ *     }>,
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1579,6 +1606,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     survos_meili?: SurvosMeiliConfig,
  *     ux_icons?: UxIconsConfig,
  *     museado_data?: MuseadoDataConfig,
+ *     survos_media?: SurvosMediaConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1605,6 +1633,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ux_icons?: UxIconsConfig,
  *         museado_data?: MuseadoDataConfig,
  *         survos_deployment?: SurvosDeploymentConfig,
+ *         survos_media?: SurvosMediaConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1627,6 +1656,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_meili?: SurvosMeiliConfig,
  *         ux_icons?: UxIconsConfig,
  *         museado_data?: MuseadoDataConfig,
+ *         survos_media?: SurvosMediaConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1652,6 +1682,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ux_icons?: UxIconsConfig,
  *         museado_data?: MuseadoDataConfig,
  *         survos_deployment?: SurvosDeploymentConfig,
+ *         survos_media?: SurvosMediaConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

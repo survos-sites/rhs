@@ -19,6 +19,7 @@
         "survos/import-bundle": ">=2.0.100",
         "survos/jsonl-bundle": "^2.0.100",
         "survos/lingua-core": "^2.0.100",
+        "survos/media-bundle": "*",
         "survos/meili-bundle": ">=2.0.100",
         "symfony/asset": "8.0.*",
         "symfony/asset-mapper": "8.0.*",
