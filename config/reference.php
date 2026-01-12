@@ -1555,6 +1555,9 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     cache_root?: scalar|null|Param, // Default: "cache"
  *     default_object_filename?: scalar|null|Param, // Default: "obj.jsonl"
  * }
+ * @psalm-type SurvosDeploymentConfig = array{
+ *     enabled?: bool|Param, // Default: true
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1601,6 +1604,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_code?: SurvosCodeConfig,
  *         ux_icons?: UxIconsConfig,
  *         museado_data?: MuseadoDataConfig,
+ *         survos_deployment?: SurvosDeploymentConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1647,6 +1651,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         survos_code?: SurvosCodeConfig,
  *         ux_icons?: UxIconsConfig,
  *         museado_data?: MuseadoDataConfig,
+ *         survos_deployment?: SurvosDeploymentConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
