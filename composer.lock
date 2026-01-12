@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "646149129fb65c5430df4a0cfb3d2d55",
+    "content-hash": "22d7b402cf9e0ee614ea505a275c9e4c",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -1830,6 +1830,53 @@
             "time": "2026-01-02T08:56:05+00:00"
         },
         {
+            "name": "mperonnet/imgproxy-php",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mperonnet/imgproxy-php.git",
+                "reference": "abc4e44af8169925b3404a404ac7300503f53d16"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mperonnet/imgproxy-php/zipball/abc4e44af8169925b3404a404ac7300503f53d16",
+                "reference": "abc4e44af8169925b3404a404ac7300503f53d16",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^8.5.8|^9.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Mperonnet\\ImgProxy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "ImgProxy URL builder with complete Pro features support for PHP, based on onliner/imgproxy-php",
+            "keywords": [
+                "image",
+                "imageproxy",
+                "imgproxy",
+                "optimization",
+                "pro",
+                "processing",
+                "resize"
+            ],
+            "support": {
+                "issues": "https://github.com/mperonnet/imgproxy-php/issues",
+                "source": "https://github.com/mperonnet/imgproxy-php/tree/v1.0.2"
+            },
+            "time": "2025-12-26T23:19:45+00:00"
+        },
+        {
             "name": "museado/data-bundle",
             "version": "1.0.0",
             "source": {
@@ -1950,6 +1997,50 @@
                 }
             ],
             "time": "2024-09-09T07:06:30+00:00"
+        },
+        {
+            "name": "onliner/imgproxy-php",
+            "version": "v0.2.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/onliner/imgproxy-php.git",
+                "reference": "cd18759f230945856ec3b0ed6fa079702e6a410f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/onliner/imgproxy-php/zipball/cd18759f230945856ec3b0ed6fa079702e6a410f",
+                "reference": "cd18759f230945856ec3b0ed6fa079702e6a410f",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.12",
+                "phpunit/phpunit": "^8.5.8|^9.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Onliner\\ImgProxy\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "ImgProxy url builder for PHP",
+            "keywords": [
+                "image",
+                "imageproxy",
+                "imgproxy",
+                "resize"
+            ],
+            "support": {
+                "issues": "https://github.com/onliner/imgproxy-php/issues",
+                "source": "https://github.com/onliner/imgproxy-php/tree/v0.2.4"
+            },
+            "time": "2024-09-16T10:04:37+00:00"
         },
         {
             "name": "php-http/discovery",
@@ -2721,7 +2812,7 @@
         },
         {
             "name": "survos/core-bundle",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/core-bundle.git",
@@ -2815,7 +2906,7 @@
         },
         {
             "name": "survos/ez-bundle",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/ez-bundle.git",
@@ -2865,7 +2956,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/ez-bundle/issues",
-                "source": "https://github.com/survos/ez-bundle/tree/2.0.103"
+                "source": "https://github.com/survos/ez-bundle/tree/2.0.104"
             },
             "funding": [
                 {
@@ -2877,7 +2968,7 @@
         },
         {
             "name": "survos/import-bundle",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/import-bundle.git",
@@ -2933,7 +3024,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/import-bundle/issues",
-                "source": "https://github.com/survos/import-bundle/tree/2.0.103"
+                "source": "https://github.com/survos/import-bundle/tree/2.0.104"
             },
             "funding": [
                 {
@@ -2945,7 +3036,7 @@
         },
         {
             "name": "survos/jsonl-bundle",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/jsonl-bundle.git",
@@ -2996,7 +3087,7 @@
             "description": "Fast, concurrent, resumable, strictly-ordered JSONL ingestion utilities for Symfony 7.3 / PHP 8.4",
             "support": {
                 "issues": "https://github.com/survos/jsonl-bundle/issues",
-                "source": "https://github.com/survos/jsonl-bundle/tree/2.0.103"
+                "source": "https://github.com/survos/jsonl-bundle/tree/2.0.104"
             },
             "funding": [
                 {
@@ -3008,7 +3099,7 @@
         },
         {
             "name": "survos/lingua-core",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/lingua-core.git",
@@ -3041,7 +3132,7 @@
             "description": "Core identity utilities (hash/key calculation and canonicalization) shared across Survos Lingua, Babel, and server implementations.",
             "support": {
                 "issues": "https://github.com/survos/lingua-core/issues",
-                "source": "https://github.com/survos/lingua-core/tree/2.0.103"
+                "source": "https://github.com/survos/lingua-core/tree/2.0.104"
             },
             "funding": [
                 {
@@ -3053,21 +3144,23 @@
         },
         {
             "name": "survos/media-bundle",
-            "version": "2.0.83",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/media-bundle.git",
-                "reference": "74fa3fa44dbb32e7209bc0f43bf33dfc2f73b190"
+                "reference": "80ecba7e656701df3662343a3818b841034658ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/survos/media-bundle/zipball/74fa3fa44dbb32e7209bc0f43bf33dfc2f73b190",
-                "reference": "74fa3fa44dbb32e7209bc0f43bf33dfc2f73b190",
+                "url": "https://api.github.com/repos/survos/media-bundle/zipball/80ecba7e656701df3662343a3818b841034658ac",
+                "reference": "80ecba7e656701df3662343a3818b841034658ac",
                 "shasum": ""
             },
             "require": {
                 "doctrine/dbal": "^4.3.2",
                 "doctrine/doctrine-bundle": "^2.7|^3.0",
+                "mperonnet/imgproxy-php": "^1.0",
+                "onliner/imgproxy-php": "^0.2",
                 "php": "^8.4",
                 "symfony/config": "^7.3||^8.0",
                 "symfony/dependency-injection": "^7.3||^8.0",
@@ -3102,7 +3195,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/media-bundle/issues",
-                "source": "https://github.com/survos/media-bundle/tree/symfonycon-2025"
+                "source": "https://github.com/survos/media-bundle/tree/2.0.104"
             },
             "funding": [
                 {
@@ -3110,11 +3203,11 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-27T12:45:39+00:00"
+            "time": "2026-01-12T18:28:14+00:00"
         },
         {
             "name": "survos/meili-bundle",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/meili-bundle.git",
@@ -3189,7 +3282,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/meili-bundle/issues",
-                "source": "https://github.com/survos/meili-bundle/tree/2.0.103"
+                "source": "https://github.com/survos/meili-bundle/tree/2.0.104"
             },
             "funding": [
                 {
@@ -11452,7 +11545,7 @@
         },
         {
             "name": "survos/code-bundle",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/code-bundle.git",
@@ -11517,7 +11610,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/code-bundle/issues",
-                "source": "https://github.com/survos/code-bundle/tree/2.0.103"
+                "source": "https://github.com/survos/code-bundle/tree/2.0.104"
             },
             "funding": [
                 {
@@ -11529,7 +11622,7 @@
         },
         {
             "name": "survos/deployment-bundle",
-            "version": "2.0.103",
+            "version": "2.0.104",
             "source": {
                 "type": "git",
                 "url": "https://github.com/survos/deployment-bundle.git",
@@ -11577,7 +11670,7 @@
             ],
             "support": {
                 "issues": "https://github.com/survos/deployment-bundle/issues",
-                "source": "https://github.com/survos/deployment-bundle/tree/2.0.103"
+                "source": "https://github.com/survos/deployment-bundle/tree/2.0.104"
             },
             "funding": [
                 {
