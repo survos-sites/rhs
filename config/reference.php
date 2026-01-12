@@ -1585,6 +1585,21 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         options?: list<mixed>,
  *     }>,
  * }
+ * @psalm-type InspectorConfig = array{
+ *     enabled?: bool|Param, // Default: true
+ *     url?: scalar|null|Param, // Default: "https://ingest.inspector.dev"
+ *     ingestion_key?: scalar|null|Param, // Default: null
+ *     unhandled_exceptions?: bool|Param, // Default: true
+ *     messenger?: bool|Param, // Default: true
+ *     query?: bool|Param, // Default: true
+ *     query_bindings?: bool|Param, // Default: true
+ *     templates?: bool|Param, // Default: true
+ *     user?: bool|Param, // Default: true
+ *     transport?: scalar|null|Param, // Default: "async"
+ *     ignore_routes?: list<scalar|null|Param>,
+ *     ignore_commands?: list<scalar|null|Param>,
+ *     ignore_messages?: list<scalar|null|Param>,
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1607,6 +1622,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     ux_icons?: UxIconsConfig,
  *     museado_data?: MuseadoDataConfig,
  *     survos_media?: SurvosMediaConfig,
+ *     inspector?: InspectorConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1634,6 +1650,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         museado_data?: MuseadoDataConfig,
  *         survos_deployment?: SurvosDeploymentConfig,
  *         survos_media?: SurvosMediaConfig,
+ *         inspector?: InspectorConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1657,6 +1674,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ux_icons?: UxIconsConfig,
  *         museado_data?: MuseadoDataConfig,
  *         survos_media?: SurvosMediaConfig,
+ *         inspector?: InspectorConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1683,6 +1701,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         museado_data?: MuseadoDataConfig,
  *         survos_deployment?: SurvosDeploymentConfig,
  *         survos_media?: SurvosMediaConfig,
+ *         inspector?: InspectorConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

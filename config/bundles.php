@@ -26,4 +26,5 @@ return [
     Museado\DataBundle\MuseadoDataBundle::class => ['all' => true],
     Survos\DeploymentBundle\SurvosDeploymentBundle::class => ['dev' => true, 'test' => true],
     Survos\MediaBundle\SurvosMediaBundle::class => ['all' => true],
+    Inspector\Symfony\Bundle\InspectorBundle::class => ['all' => true],
 ];
