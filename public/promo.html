@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Museado ScanStation — Turnkey Digitization for Museums & Archives</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f8f6f1;
+            --accent: #c45a3b;
+            --accent-light: #e8d4c8;
+            --slate: #4a5568;
+            --mist: #e8e6e1;
+            --success: #2d6a4f;
+            --info: #1e6091;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            font-size: 17px;
+        }
+
+        /* Utility */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--mist);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--ink);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav a {
+            color: var(--slate);
+            text-decoration: none;
+            margin-left: 2rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 6rem 0 4rem;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-sub {
+            font-size: 1.25rem;
+            color: var(--slate);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+        }
+
+        .hero-price {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-price-note {
+            font-size: 0.9rem;
+            color: var(--slate);
+        }
+
+        /* Workflow Section */
+        .workflow-section {
+            padding: 5rem 0;
+            background: linear-gradient(180deg, var(--paper) 0%, #fff 100%);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.25rem;
+            font-weight: 400;
+            margin-bottom: 1rem;
+        }
+
+        .section-sub {
+            color: var(--slate);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Pipeline Graphic */
+        .pipeline {
+            background: #fff;
+            border: 1px solid var(--mist);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .pipeline-stages {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            min-width: 900px;
+            gap: 1rem;
+        }
+
+        .pipeline-stage {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .pipeline-stage:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 2.5rem;
+            right: -1rem;
+            width: 2rem;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%);
+        }
+
+        .stage-icon {
+            width: 5rem;
+            height: 5rem;
+            background: var(--paper);
+            border: 2px solid var(--mist);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            transition: all 0.3s;
+        }
+
+        .pipeline-stage:hover .stage-icon {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: translateY(-4px);
+        }
+
+        .stage-label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--ink);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stage-items {
+            list-style: none;
+            font-size: 0.9rem;
+            color: var(--slate);
+        }
+
+        .stage-items li {
+            padding: 0.3rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .stage-items li::before {
+            content: '•';
+            color: var(--accent);
+        }
+
+        /* Detailed Workflow Diagram */
+        .workflow-diagram {
+            margin: 4rem 0 2rem;
+        }
+
+        .diagram-svg {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Features Grid */
+        .features-section {
+            padding: 5rem 0;
+            background: var(--ink);
+            color: #fff;
+        }
+
+        .features-section h2 {
+            color: #fff;
+        }
+
+        .features-section .section-sub {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            background: rgba(255,255,255,0.08);
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Package Section */
+        .package-section {
+            padding: 5rem 0;
+        }
+
+        .package-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .package-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .package-card {
+            background: #fff;
+            border: 2px solid var(--mist);
+            border-radius: 1rem;
+            padding: 2.5rem;
+        }
+
+        .package-card.featured {
+            border-color: var(--accent);
+            position: relative;
+        }
+
+        .package-card.featured::before {
+            content: 'Complete Package';
+            position: absolute;
+            top: -0.75rem;
+            left: 2rem;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.25rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .package-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .package-price {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--accent);
+            margin: 1rem 0;
+        }
+
+        .package-price span {
+            font-size: 1rem;
+            color: var(--slate);
+        }
+
+        .package-list {
+            list-style: none;
+            margin: 1.5rem 0;
+            border-top: 1px solid var(--mist);
+            padding-top: 1.5rem;
+        }
+
+        .package-list li {
+            padding: 0.6rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .package-list li::before {
+            content: '✓';
+            color: var(--success);
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .package-note {
+            font-size: 0.85rem;
+            color: var(--slate);
+            font-style: italic;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--mist);
+        }
+
+        /* Hardware Specs */
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .specs-table th,
+        .specs-table td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--mist);
+        }
+
+        .specs-table th {
+            font-weight: 600;
+            color: var(--slate);
+            width: 40%;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 5rem 0;
+            background: var(--accent-light);
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #a84832;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: var(--ink);
+            border: 2px solid var(--ink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--ink);
+            color: #fff;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--mist);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--slate);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--accent);
+        }
+
+        /* Animation */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate {
+            animation: fadeUp 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="#" class="logo">Museado<span>.</span></a>
+            <nav>
+                <a href="#workflow">How It Works</a>
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="mailto:tac@museado.org">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <span class="hero-badge">Turnkey Digitization Platform</span>
+            <h1>From shoebox to searchable archive in one day</h1>
+            <p class="hero-sub">ScanStation is a complete hardware + software + AI package that transforms how small museums and historical societies digitize their collections.</p>
+            <div class="hero-price">$4,995</div>
+            <p class="hero-price-note">Includes hardware, software, on-site training & one year support</p>
+        </div>
+    </section>
+
+    <section class="workflow-section" id="workflow">
+        <div class="container">
+            <div class="section-header">
+                <h2>The Pipeline</h2>
+                <p class="section-sub">Four stages transform physical artifacts into structured, searchable digital assets—with AI doing the heavy lifting.</p>
+            </div>
+
+            <div class="pipeline">
+                <div class="pipeline-stages">
+                    <div class="pipeline-stage">
+                        <div class="stage-icon">📥</div>
+                        <div class="stage-label">Input</div>
+                        <ul class="stage-items">
+                            <li>Overhead scanner</li>
+                            <li>Sheet-fed scanner</li>
+                            <li>Smartphone camera</li>
+                            <li>Audio recorder</li>
+                        </ul>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="stage-icon">🔍</div>
+                        <div class="stage-label">Pre-Process</div>
+                        <ul class="stage-items">
+                            <li>Barcode/QR detection</li>
+                            <li>Accession ID extraction</li>
+                            <li>Directive parsing</li>
+                            <li>Image optimization</li>
+                        </ul>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="stage-icon">🧠</div>
+                        <div class="stage-label">AI Analysis</div>
+                        <ul class="stage-items">
+                            <li>Keyword generation</li>
+                            <li>NSFW flagging</li>
+                            <li>OCR + summarization</li>
+                            <li>Audio transcription</li>
+                            <li>Translation</li>
+                        </ul>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="stage-icon">📤</div>
+                        <div class="stage-label">Output</div>
+                        <ul class="stage-items">
+                            <li>Structured metadata</li>
+                            <li>Searchable archive</li>
+                            <li>Dublin Core export</li>
+                            <li>Collection website</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed SVG Diagram -->
+            <div class="workflow-diagram">
+                <svg class="diagram-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Background -->
+                    <rect width="1000" height="500" fill="#fdfcfa"/>
+                    
+                    <!-- Stage backgrounds -->
+                    <rect x="20" y="80" width="220" height="380" rx="12" fill="#f8f6f1" stroke="#e8e6e1" stroke-width="2"/>
+                    <rect x="270" y="80" width="200" height="380" rx="12" fill="#f8f6f1" stroke="#e8e6e1" stroke-width="2"/>
+                    <rect x="500" y="80" width="220" height="380" rx="12" fill="#fff5f0" stroke="#c45a3b" stroke-width="2" stroke-dasharray="4"/>
+                    <rect x="750" y="80" width="230" height="380" rx="12" fill="#f0f7f4" stroke="#2d6a4f" stroke-width="2"/>
+                    
+                    <!-- Stage labels -->
+                    <text x="130" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#4a5568" letter-spacing="0.1em">INPUT</text>
+                    <text x="370" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#4a5568" letter-spacing="0.1em">PRE-PROCESS</text>
+                    <text x="610" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#c45a3b" letter-spacing="0.1em">AI ANALYSIS</text>
+                    <text x="865" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#2d6a4f" letter-spacing="0.1em">OUTPUT</text>
+                    
+                    <!-- Input devices -->
+                    <g transform="translate(60, 110)">
+                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
+                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📷 Overhead</text>
+                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">VIISAN K48</text>
+                    </g>
+                    <g transform="translate(60, 185)">
+                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
+                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📄 Sheet Feeder</text>
+                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">ADF Scanner</text>
+                    </g>
+                    <g transform="translate(60, 260)">
+                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
+                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📱 Smartphone</text>
+                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">iOS / Android</text>
+                    </g>
+                    <g transform="translate(60, 335)">
+                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
+                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🎙️ Audio</text>
+                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">Oral Histories</text>
+                    </g>
+                    
+                    <!-- Pre-process items -->
+                    <g transform="translate(290, 120)">
+                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
+                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Barcode / QR Scan</text>
+                    </g>
+                    <g transform="translate(290, 185)">
+                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
+                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Accession ID Lookup</text>
+                    </g>
+                    <g transform="translate(290, 250)">
+                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
+                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Directive Parsing</text>
+                    </g>
+                    <g transform="translate(290, 315)">
+                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
+                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Deskew / Crop</text>
+                    </g>
+                    <g transform="translate(290, 380)">
+                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
+                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Format Conversion</text>
+                    </g>
+                    
+                    <!-- AI Analysis items -->
+                    <g transform="translate(520, 110)">
+                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
+                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🏷️ BLIP-2 Keywords</text>
+                    </g>
+                    <g transform="translate(520, 165)">
+                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
+                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🔒 NSFW Detection</text>
+                    </g>
+                    <g transform="translate(520, 220)">
+                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
+                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📝 OCR + Summary</text>
+                    </g>
+                    <g transform="translate(520, 275)">
+                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
+                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🎧 Whisper Transcribe</text>
+                    </g>
+                    <g transform="translate(520, 330)">
+                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
+                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🌐 NLLB Translation</text>
+                    </g>
+                    <g transform="translate(520, 385)">
+                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
+                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🤖 LLM Enrichment</text>
+                    </g>
+                    
+                    <!-- Output items -->
+                    <g transform="translate(770, 120)">
+                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
+                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Structured Metadata</text>
+                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">JSON / CSV / XML</text>
+                    </g>
+                    <g transform="translate(770, 190)">
+                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
+                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Searchable Archive</text>
+                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">Meilisearch Index</text>
+                    </g>
+                    <g transform="translate(770, 260)">
+                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
+                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Dublin Core Export</text>
+                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">Standards Compliant</text>
+                    </g>
+                    <g transform="translate(770, 330)">
+                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
+                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Collection Website</text>
+                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">Public or Private</text>
+                    </g>
+                    <g transform="translate(770, 400)">
+                        <rect width="190" height="45" rx="8" fill="#2d6a4f"/>
+                        <text x="95" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="12" fill="#fff">🌍 museado.org</text>
+                    </g>
+                    
+                    <!-- Flow arrows -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#c45a3b"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- Arrow from Input to Pre-process -->
+                    <path d="M 210 270 L 280 270" stroke="#c45a3b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    
+                    <!-- Arrow from Pre-process to AI -->
+                    <path d="M 460 270 L 510 270" stroke="#c45a3b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    
+                    <!-- Arrow from AI to Output -->
+                    <path d="M 710 270 L 760 270" stroke="#2d6a4f" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    
+                    <!-- "All Local" badge -->
+                    <g transform="translate(540, 440)">
+                        <rect width="140" height="30" rx="15" fill="#c45a3b"/>
+                        <text x="70" y="20" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="11" fill="#fff">🔐 100% LOCAL AI</text>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Built for Small Institutions</h2>
+                <p class="section-sub">No cloud subscriptions. No IT department required. No ongoing fees.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔐</div>
+                    <h3>100% Local Processing</h3>
+                    <p>All AI runs on the included workstation. Sensitive materials never leave your building. No internet required for scanning.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Barcode Workflow</h3>
+                    <p>Print QR codes with accession numbers. Scan the code, scan the object—metadata links automatically. Batch hundreds of items per hour.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏷️</div>
+                    <h3>AI-Generated Keywords</h3>
+                    <p>Vision models automatically describe image contents: "black and white photograph, woman, 1940s dress, standing, house exterior."</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Sensitive Content Flagging</h3>
+                    <p>Automatic detection of nudity and potentially sensitive imagery. Flag for review before public access—protect your institution.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎙️</div>
+                    <h3>Oral History Transcription</h3>
+                    <p>Whisper AI transcribes audio recordings with remarkable accuracy. Searchable text from hours of interviews in minutes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Multi-Language Support</h3>
+                    <p>OCR and translation for 200+ languages. Process Spanish land grants, German immigration records, Japanese-American documents.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Semantic Search</h3>
+                    <p>Find "photos of the old mill" even if no record mentions those exact words. AI understands meaning, not just keywords.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📤</div>
+                    <h3>Standards Export</h3>
+                    <p>Dublin Core, CSV, JSON. Compatible with CollectiveAccess, PastPerfect, ArchivesSpace. Your data is never locked in.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="package-section" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>What's Included</h2>
+                <p class="section-sub">Everything you need to start digitizing. No hidden costs.</p>
+            </div>
+
+            <div class="package-grid">
+                <div class="package-card featured">
+                    <h3>ScanStation Complete</h3>
+                    <div class="package-price">$4,995 <span>one-time</span></div>
+                    <ul class="package-list">
+                        <li><strong>VIISAN K48 Scanner</strong> — 48MP overhead book scanner with curve-flattening, A3 size capacity</li>
+                        <li><strong>BOSGAME M4 Workstation</strong> — Ryzen 7, 32GB DDR5, 1TB NVMe, Windows 11 Pro</li>
+                        <li><strong>Museado ScanStation Software</strong> — Pre-configured with all AI models, workflow automation, Meilisearch</li>
+                        <li><strong>On-Site Training</strong> — Full day with your team: scanning workflow, metadata best practices, troubleshooting</li>
+                        <li><strong>One Year Support</strong> — Email and video call support, software updates, model improvements</li>
+                        <li><strong>QR Code Starter Kit</strong> — Label printer templates, sample workflows, documentation</li>
+                    </ul>
+                    <p class="package-note">Travel expenses additional for on-site training. Remote training available at reduced cost.</p>
+                </div>
+
+                <div class="package-card">
+                    <h3>Hardware Specifications</h3>
+                    <table class="specs-table">
+                        <tr>
+                            <th>Scanner</th>
+                            <td>VIISAN K48 Professional</td>
+                        </tr>
+                        <tr>
+                            <th>Resolution</th>
+                            <td>48MP (600 DPI output)</td>
+                        </tr>
+                        <tr>
+                            <th>Max Size</th>
+                            <td>A3 (11.7" × 16.5")</td>
+                        </tr>
+                        <tr>
+                            <th>Computer</th>
+                            <td>BOSGAME M4 Mini PC</td>
+                        </tr>
+                        <tr>
+                            <th>CPU</th>
+                            <td>AMD Ryzen 7 8745HS (8-core)</td>
+                        </tr>
+                        <tr>
+                            <th>Memory</th>
+                            <td>32GB DDR5</td>
+                        </tr>
+                        <tr>
+                            <th>Storage</th>
+                            <td>1TB NVMe + expansion slot</td>
+                        </tr>
+                        <tr>
+                            <th>Network</th>
+                            <td>Dual 2.5GbE, WiFi 6E</td>
+                        </tr>
+                        <tr>
+                            <th>AI Models</th>
+                            <td>BLIP-2, Whisper, NLLB, NudeNet</td>
+                        </tr>
+                        <tr>
+                            <th>Search</th>
+                            <td>Meilisearch (semantic + keyword)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to make your collection discoverable?</h2>
+            <p class="section-sub">The Museado Foundation is a 501(c)(3) nonprofit. We exist to help small cultural institutions preserve and share their holdings.</p>
+            <div class="cta-buttons">
+                <a href="mailto:tac@museado.org?subject=ScanStation%20Inquiry" class="btn btn-primary">Request a Demo</a>
+                <a href="https://museado.org" class="btn btn-secondary">Learn About Museado</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Museado Foundation</div>
+            <p class="footer-text">A 501(c)(3) nonprofit helping museums, archives, and historical societies preserve cultural heritage.<br>
+            <a href="https://museado.org">museado.org</a> · <a href="mailto:tac@museado.org">tac@museado.org</a></p>
+        </div>
+    </footer>
+</body>
+</html>
