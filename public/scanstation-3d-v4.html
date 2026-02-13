@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScanStation 3D v4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Outfit:wght@300;400;600;700&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#eae8e4;color:#333;font-family:'Outfit',sans-serif;overflow:hidden;height:100vh}
+  canvas{display:block}
+  #ui{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10}
+  #title{position:absolute;top:18px;left:24px;pointer-events:auto}
+  #title h1{font-family:'JetBrains Mono',monospace;font-size:19px;font-weight:600;color:#1a6b4a;letter-spacing:2px;text-transform:uppercase}
+  #title p{font-size:12px;color:#888;margin-top:2px;font-family:'JetBrains Mono',monospace;font-weight:300}
+  #legend{position:absolute;bottom:18px;left:24px;pointer-events:auto;background:rgba(255,255,255,0.9);border:1px solid rgba(0,0,0,0.1);border-radius:8px;padding:12px 16px;backdrop-filter:blur(12px);box-shadow:0 2px 10px rgba(0,0,0,0.07)}
+  #legend h3{font-family:'JetBrains Mono',monospace;font-size:10px;color:#1a6b4a;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:7px}
+  .li{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:12px;color:#555}
+  .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  #hint{position:absolute;bottom:18px;right:24px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:10px;color:#999;line-height:1.8;pointer-events:auto}
+  #hint span{color:#666}
+  #views{position:absolute;top:18px;right:24px;display:flex;gap:5px;pointer-events:auto}
+  .vb{font-family:'JetBrains Mono',monospace;font-size:10px;padding:6px 11px;border:1px solid rgba(0,0,0,0.14);border-radius:5px;background:rgba(255,255,255,0.85);color:#666;cursor:pointer;transition:all .3s;text-transform:uppercase;letter-spacing:1px}
+  .vb:hover{border-color:#1a6b4a;color:#1a6b4a;background:rgba(26,107,74,0.06)}
+  .vb.on{border-color:#1a6b4a;color:#1a6b4a;background:rgba(26,107,74,0.1);font-weight:600}
+  #tip{position:absolute;display:none;background:rgba(255,255,255,0.95);border:1px solid rgba(26,107,74,0.3);border-radius:5px;padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#1a6b4a;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,0.08);z-index:100;white-space:nowrap}
+</style>
+</head>
+<body>
+<div id="ui">
+  <div id="title"><h1>ScanStation v4</h1><p>Multi-Camera Digitization Station</p></div>
+  <div id="views">
+    <button class="vb on" data-v="persp">3/4 View</button>
+    <button class="vb" data-v="front">Front</button>
+    <button class="vb" data-v="side">Side</button>
+    <button class="vb" data-v="top">Top</button>
+    <button class="vb" data-v="back">Back</button>
+  </div>
+  <div id="legend">
+    <h3>Components</h3>
+    <div class="li"><div class="dot" style="background:#2d2d3a"></div>GMKtec N150 (vertical, rotated thin-to-wall)</div>
+    <div class="li"><div class="dot" style="background:#3366aa"></div>Viisan K48 (~16" tall, base half on mat edge)</div>
+    <div class="li"><div class="dot" style="background:#cc5533"></div>Side Camera + LED Ring (on top of PC)</div>
+    <div class="li"><div class="dot" style="background:#8866bb"></div>A3 ArUco Mat with base cutout</div>
+    <div class="li"><div class="dot" style="background:#777"></div>USB Cables (rear routed)</div>
+  </div>
+  <div id="hint"><span>Left drag</span> Rotate<br><span>Right drag</span> Pan<br><span>Scroll</span> Zoom</div>
+</div>
+<div id="tip"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xeae8e4);
+const camera = new THREE.PerspectiveCamera(45, innerWidth/innerHeight, 0.1, 500);
+const R = new THREE.WebGLRenderer({antialias:true});
+R.setSize(innerWidth,innerHeight);
+R.setPixelRatio(Math.min(devicePixelRatio,2));
+R.shadowMap.enabled=true;
+R.shadowMap.type=THREE.PCFSoftShadowMap;
+R.toneMapping=THREE.ACESFilmicToneMapping;
+R.toneMappingExposure=1.9;
+document.body.appendChild(R.domElement);
+
+// Lighting — bright and clear
+scene.add(new THREE.AmbientLight(0xffffff,0.75));
+const sun=new THREE.DirectionalLight(0xffffff,0.9);
+sun.position.set(8,22,12);sun.castShadow=true;
+const s=sun.shadow;s.mapSize.set(2048,2048);
+s.camera.near=0.5;s.camera.far=50;s.camera.left=-18;s.camera.right=18;s.camera.top=18;s.camera.bottom=-18;
+scene.add(sun);
+const f1=new THREE.DirectionalLight(0xeeeeff,0.45);f1.position.set(-10,12,-6);scene.add(f1);
+const f2=new THREE.DirectionalLight(0xffeedd,0.35);f2.position.set(5,8,-10);scene.add(f2);
+scene.add(new THREE.HemisphereLight(0xeef4ff,0xd4c8a8,0.45));
+
+// Materials
+const M={
+  pc:new THREE.MeshStandardMaterial({color:0x2d2d3a,metalness:0.6,roughness:0.35}),
+  pcA:new THREE.MeshStandardMaterial({color:0x22bb77,metalness:0.4,roughness:0.4,emissive:0x22bb77,emissiveIntensity:0.15}),
+  pcV:new THREE.MeshStandardMaterial({color:0x1a1a25}),
+  sB:new THREE.MeshStandardMaterial({color:0x333345,metalness:0.5,roughness:0.4}),
+  pole:new THREE.MeshStandardMaterial({color:0x3a3a4a,metalness:0.6,roughness:0.35}),
+  head:new THREE.MeshStandardMaterial({color:0x3366aa,metalness:0.45,roughness:0.4}),
+  lens:new THREE.MeshStandardMaterial({color:0x1a1a2a,metalness:0.85,roughness:0.15}),
+  lG:new THREE.MeshStandardMaterial({color:0x3355aa,metalness:0.8,roughness:0.1}),
+  cam:new THREE.MeshStandardMaterial({color:0x3a3a3a,metalness:0.5,roughness:0.4}),
+  cA:new THREE.MeshStandardMaterial({color:0xcc5533,metalness:0.3,roughness:0.5,emissive:0xcc5533,emissiveIntensity:0.1}),
+  led:new THREE.MeshStandardMaterial({color:0xffffee,metalness:0.2,roughness:0.4,emissive:0xffffcc,emissiveIntensity:0.4}),
+  mS:new THREE.MeshStandardMaterial({color:0xf5f0e8,metalness:0.05,roughness:0.85}),
+  mB:new THREE.MeshStandardMaterial({color:0x8866bb,metalness:0.1,roughness:0.7}),
+  aB:new THREE.MeshStandardMaterial({color:0x222222}),
+  aW:new THREE.MeshStandardMaterial({color:0xfafafa}),
+  tbl:new THREE.MeshStandardMaterial({color:0xc4b89a,metalness:0.05,roughness:0.8}),
+  las:new THREE.MeshStandardMaterial({color:0xff2200,emissive:0xff2200,emissiveIntensity:0.5,transparent:true,opacity:0.3}),
+  art:new THREE.MeshStandardMaterial({color:0xa06030,metalness:0.15,roughness:0.65}),
+  usb:new THREE.MeshStandardMaterial({color:0x2255cc,metalness:0.6,roughness:0.3}),
+};
+
+const LO=[];
+function lbl(m,t){m.userData.label=t;LO.push(m)}
+
+// ===== COORDINATE SYSTEM =====
+// X = left-right, Z = front-back (positive Z = back/wall side)
+// 1 unit = 1 inch
+// Mat front edge at Z = -mD/2, back edge at Z = +mD/2
+// "Back" = closer to wall = positive Z
+
+const mW=16.5, mD=11.7, mH=0.15; // A3 mat
+const oW=4.0, oD=2.2; // scanner oval base (estimated)
+
+// Table
+const t=new THREE.Mesh(new THREE.BoxGeometry(28,0.5,20),M.tbl);
+t.position.set(0,-0.25,1);t.receiveShadow=true;scene.add(t);
+
+// Subtle grid
+const gr=new THREE.GridHelper(28,28,0x999999,0xcccccc);
+gr.material.transparent=true;gr.material.opacity=0.05;gr.position.y=0.01;scene.add(gr);
+
+// ===== MAT =====
+// Border
+const bd=new THREE.Mesh(new THREE.BoxGeometry(mW+0.5,mH,mD+0.5),M.mB);
+bd.position.y=mH/2;bd.receiveShadow=true;scene.add(bd);
+
+// Surface with oval cutout at back center
+// Oval center: x=0, z = mD/2 (back edge). Oval straddles the edge: half on, half off
+// So oval center y-coord (in 2D shape, where y=z) = mD/2
+const sh=new THREE.Shape();
+sh.moveTo(-mW/2,-mD/2);sh.lineTo(mW/2,-mD/2);
+sh.lineTo(mW/2,mD/2);sh.lineTo(-mW/2,mD/2);sh.closePath();
+const ho=new THREE.Path();
+for(let i=0;i<=32;i++){
+  const a=(i/32)*Math.PI*2;
+  const x=Math.cos(a)*oW/2;
+  const y=Math.sin(a)*oD/2+mD/2; // centered ON the back edge
+  i===0?ho.moveTo(x,y):ho.lineTo(x,y);
+}
+sh.holes.push(ho);
+const mMesh=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:0.05,bevelEnabled:false}),M.mS);
+mMesh.rotation.x=-Math.PI/2;mMesh.position.y=mH+0.01;
+mMesh.receiveShadow=true;scene.add(mMesh);
+lbl(mMesh,"A3 ArUco Mat — 16.5\" × 11.7\", oval cutout at back edge");
+
+// ArUco markers at corners
+function mkA(x,z){
+  const g=new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.BoxGeometry(0.9,0.05,0.9),M.aB));
+  const w=new THREE.Mesh(new THREE.BoxGeometry(0.55,0.06,0.55),M.aW);g.add(w);
+  [[-1,-1],[1,-1],[0,1]].forEach(([px,pz])=>{
+    const s=new THREE.Mesh(new THREE.BoxGeometry(0.14,0.07,0.14),M.aB);
+    s.position.set(px*0.15,0,pz*0.15);g.add(s);
+  });
+  g.position.set(x,mH+0.06,z);return g;
+}
+const ax=mW/2-0.8,az=mD/2-0.8;
+scene.add(mkA(-ax,-az));scene.add(mkA(ax,-az));
+scene.add(mkA(-ax,az));scene.add(mkA(ax,az));
+
+// Sample artifact
+const pr=[
+  new THREE.Vector2(0,0),new THREE.Vector2(0.5,0),
+  new THREE.Vector2(0.6,0.3),new THREE.Vector2(0.42,0.9),
+  new THREE.Vector2(0.35,1.2),new THREE.Vector2(0.45,1.5),
+  new THREE.Vector2(0.4,1.8),new THREE.Vector2(0.28,1.9),
+];
+const vas=new THREE.Mesh(new THREE.LatheGeometry(pr,16),M.art);
+vas.position.set(0,mH+0.05,-0.5);vas.castShadow=true;scene.add(vas);
+lbl(vas,"Sample artifact — ceramic vessel");
+
+// ===== VIISAN K48 SCANNER =====
+// Total height: ~16". Arm ~8" from back of mat toward front.
+// Base centered ON the back edge of mat (half on, half off).
+const scG=new THREE.Group();
+
+// Oval base
+const bShape=new THREE.Shape();
+for(let i=0;i<=32;i++){
+  const a=(i/32)*Math.PI*2;
+  i===0?bShape.moveTo(Math.cos(a)*oW/2,Math.sin(a)*oD/2)
+       :bShape.lineTo(Math.cos(a)*oW/2,Math.sin(a)*oD/2);
+}
+const sBas=new THREE.Mesh(
+  new THREE.ExtrudeGeometry(bShape,{depth:0.5,bevelEnabled:true,bevelThickness:0.06,bevelSize:0.06,bevelSegments:3}),
+  M.sB
+);
+sBas.rotation.x=-Math.PI/2;
+scG.add(sBas);
+lbl(sBas,"K48 oval base — half on mat, half behind");
+
+// Pole: from base up to ~15.5" (leaving 0.5" for base)
+const poleH=15;
+const pole=new THREE.Mesh(new THREE.CylinderGeometry(0.28,0.32,poleH,12),M.pole);
+pole.position.set(0,poleH/2+0.5,0);pole.castShadow=true;scG.add(pole);
+
+// Arm: extends ~8" forward (negative Z) from pole top
+const armLen=8;
+const arm=new THREE.Mesh(new THREE.BoxGeometry(0.4,0.25,armLen),M.pole);
+arm.position.set(0,poleH+0.3,-armLen/2);arm.castShadow=true;scG.add(arm);
+
+// Head at end of arm
+const hG=new THREE.Group();
+const hB=new THREE.Mesh(new THREE.BoxGeometry(2.2,0.8,1.6),M.head);
+hB.castShadow=true;hG.add(hB);
+lbl(hB,"Viisan K48 — 48MP, USB 3.0, laser positioning");
+const lH=new THREE.Mesh(new THREE.CylinderGeometry(0.35,0.4,0.28,16),M.lens);
+lH.position.y=-0.54;hG.add(lH);
+const lg=new THREE.Mesh(new THREE.CircleGeometry(0.3,16),M.lG);
+lg.rotation.x=Math.PI/2;lg.position.y=-0.69;hG.add(lg);
+// Lasers
+[0.28,-0.28].forEach(xo=>{
+  const l=new THREE.Mesh(new THREE.CylinderGeometry(0.008,0.008,poleH,4),M.las);
+  l.position.set(xo,-poleH/2-0.3,0);hG.add(l);
+});
+hG.position.set(0,poleH+0.3,-armLen);
+scG.add(hG);
+
+// Scanner position: base centered on mat back edge
+scG.position.set(0,mH,mD/2);
+scene.add(scG);
+
+// ===== GMKtec PC (VERTICAL, ROTATED 90° — thin side to wall) =====
+// Dimensions: 4.5" x 4" x 1.5"
+// Standing vertical: height=4.5", one horizontal dim=4", other=1.5"
+// Rotated so the 1.5" (thin) dimension faces toward wall (Z direction)
+// This means: width(X)=4", height(Y)=4.5", depth(Z)=1.5"
+const pcW=4, pcH=4.5, pcDp=1.5;
+const pcG=new THREE.Group();
+
+const pcB=new THREE.Mesh(new THREE.BoxGeometry(pcW,pcH,pcDp),M.pc);
+pcB.castShadow=true;pcB.receiveShadow=true;pcG.add(pcB);
+lbl(pcB,"GMKtec N150 — thin side to wall, only 1.5\" from wall needed");
+
+// Vents on top
+for(let i=-1.2;i<=1.2;i+=0.3){
+  const v=new THREE.Mesh(new THREE.BoxGeometry(2.8,0.02,0.07),M.pcV);
+  v.position.set(0,pcH/2+0.01,i);pcG.add(v);
+}
+// Accent strip
+const ac=new THREE.Mesh(new THREE.BoxGeometry(pcW+0.03,0.04,pcDp+0.03),M.pcA);
+ac.position.y=pcH/2+0.02;pcG.add(ac);
+// LED
+const pl=new THREE.Mesh(new THREE.SphereGeometry(0.06,8,8),M.pcA);
+pl.position.set(-pcW/2-0.01,0.3,0);pcG.add(pl);
+// USB ports on back face (positive Z = toward wall)
+for(let i=0;i<4;i++){
+  const u=new THREE.Mesh(new THREE.BoxGeometry(0.2,0.13,0.06),M.usb);
+  u.position.set(-0.8+i*0.55,0,pcDp/2+0.03);pcG.add(u);
+}
+
+// Position: behind mat, to the left of scanner base
+// Mat back edge at Z = mD/2 = 5.85
+// PC depth is 1.5", place it right behind mat
+const pcX=-3.5;
+const pcZ=mD/2+pcDp/2+0.3; // just barely behind mat edge
+pcG.position.set(pcX,pcH/2+0.01,pcZ);
+scene.add(pcG);
+
+// ===== SIDE CAMERA ON TOP OF PC =====
+const cG=new THREE.Group();
+const cBd=new THREE.Mesh(new THREE.BoxGeometry(1.1,0.85,0.85),M.cam);
+cBd.castShadow=true;cG.add(cBd);
+lbl(cBd,"Side Camera — 1080p USB webcam");
+
+// Lens facing forward (negative Z)
+const cBr=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.25,0.4,12),M.lens);
+cBr.rotation.x=Math.PI/2;cBr.position.z=-0.63;cG.add(cBr);
+const cGl=new THREE.Mesh(new THREE.CircleGeometry(0.18,12),M.lG);
+cGl.position.z=-0.84;cG.add(cGl);
+
+// LED ring
+const lr=new THREE.Mesh(new THREE.TorusGeometry(0.28,0.04,8,24),M.led);
+lr.position.z=-0.64;cG.add(lr);
+lbl(lr,"LED ring — fill light for objects");
+
+// Activity LED
+const cLd=new THREE.Mesh(new THREE.SphereGeometry(0.04,8,8),M.cA);
+cLd.position.set(0.38,0.3,-0.15);cG.add(cLd);
+
+// Tilt down toward mat center
+cG.rotation.x=-0.45;
+cG.position.set(pcX,pcH+0.55,pcZ-0.3);
+scene.add(cG);
+
+// LED spotlight
+const cs=new THREE.SpotLight(0xffffdd,0.25,16,Math.PI/5,0.5);
+cs.position.copy(cG.position);cs.target.position.set(0,0.5,-0.5);
+scene.add(cs);scene.add(cs.target);
+
+// ===== CABLES =====
+function cable(pts,col){
+  const c=new THREE.CatmullRomCurve3(pts);
+  const m=new THREE.Mesh(new THREE.TubeGeometry(c,20,0.05,6,false),
+    new THREE.MeshStandardMaterial({color:col||0x333333,roughness:0.85}));
+  m.castShadow=true;return m;
+}
+
+// PC → Scanner base (short hop along back)
+const c1=cable([
+  new THREE.Vector3(pcX+pcW/2,0.8,pcZ),
+  new THREE.Vector3(pcX+pcW/2+1.5,0.4,mD/2+0.3),
+  new THREE.Vector3(0,0.35,mD/2+0.2),
+],0x2a2a2a);
+scene.add(c1);lbl(c1,"USB 3.0 — PC to Viisan K48");
+
+// Camera → PC (very short drop)
+const c2=cable([
+  new THREE.Vector3(pcX,pcH+0.15,pcZ-0.5),
+  new THREE.Vector3(pcX,pcH,pcZ-0.1),
+  new THREE.Vector3(pcX,pcH*0.75,pcZ),
+],0x333333);
+scene.add(c2);lbl(c2,"USB — camera to PC");
+
+// Power out back
+const c3=cable([
+  new THREE.Vector3(pcX,0.4,pcZ+pcDp/2),
+  new THREE.Vector3(pcX-0.5,0.2,pcZ+2),
+  new THREE.Vector3(pcX-0.5,0.15,pcZ+4),
+],0x1a1a1a);
+scene.add(c3);lbl(c3,"12V power");
+
+// ===== FOV CONES =====
+// Overhead: from head position down to mat
+const headWorldZ=mD/2-armLen; // scanner head Z position
+const headWorldY=poleH+0.3+mH;
+const ohG=new THREE.ConeGeometry(5,poleH,4,1,true);
+const oh=new THREE.Mesh(ohG,new THREE.MeshBasicMaterial({color:0x3366aa,transparent:true,opacity:0.035,side:THREE.DoubleSide}));
+oh.position.set(0,headWorldY-poleH/2,headWorldZ);oh.rotation.y=Math.PI/4;
+scene.add(oh);
+const ohW=new THREE.Mesh(ohG,new THREE.MeshBasicMaterial({color:0x3366aa,transparent:true,opacity:0.07,wireframe:true}));
+ohW.position.copy(oh.position);ohW.rotation.copy(oh.rotation);scene.add(ohW);
+
+// Side cam FOV
+const sfG=new THREE.ConeGeometry(2,8,4,1,true);
+const sf=new THREE.Mesh(sfG,new THREE.MeshBasicMaterial({color:0xcc5533,transparent:true,opacity:0.03,side:THREE.DoubleSide}));
+const cp=cG.position.clone();
+const tgt=new THREE.Vector3(0,1.2,-0.5);
+const mid=cp.clone().add(tgt).multiplyScalar(0.5);
+sf.position.copy(mid);sf.lookAt(tgt);sf.rotateX(Math.PI/2);
+scene.add(sf);
+const sfW=new THREE.Mesh(sfG,new THREE.MeshBasicMaterial({color:0xcc5533,transparent:true,opacity:0.05,wireframe:true}));
+sfW.position.copy(sf.position);sfW.rotation.copy(sf.rotation);scene.add(sfW);
+
+// ===== DIMENSIONS =====
+function dim(a,b,txt){
+  const lm=new THREE.LineBasicMaterial({color:0x888888,transparent:true,opacity:0.45});
+  scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([a,b]),lm));
+  const d=new THREE.Vector3().subVectors(b,a).normalize();
+  const p=new THREE.Vector3(-d.z,0,d.x);
+  [a,b].forEach(pt=>{
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+      pt.clone().add(p.clone().multiplyScalar(0.25)),
+      pt.clone().sub(p.clone().multiplyScalar(0.25))
+    ]),lm));
+  });
+  const cv=document.createElement('canvas');cv.width=256;cv.height=64;
+  const cx=cv.getContext('2d');cx.font='bold 26px JetBrains Mono';cx.fillStyle='#666';cx.textAlign='center';
+  cx.fillText(txt,128,40);
+  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv),transparent:true}));
+  sp.scale.set(3.5,0.9,1);
+  const m2=a.clone().add(b).multiplyScalar(0.5);m2.y+=0.5;
+  sp.position.copy(m2);scene.add(sp);
+}
+dim(new THREE.Vector3(-mW/2,0.05,-mD/2-1.5),new THREE.Vector3(mW/2,0.05,-mD/2-1.5),'16.5"');
+dim(new THREE.Vector3(mW/2+1.5,0.05,-mD/2),new THREE.Vector3(mW/2+1.5,0.05,mD/2),'11.7"');
+// Scanner height
+dim(new THREE.Vector3(2.5,mH,mD/2),new THREE.Vector3(2.5,16+mH,mD/2),'~16"');
+// Depth from mat front to wall (mat back + PC depth)
+const wallZ=pcZ+pcDp/2;
+dim(new THREE.Vector3(-mW/2-1.5,0.05,-mD/2),new THREE.Vector3(-mW/2-1.5,0.05,wallZ),'~14" total depth');
+
+// ===== ORBIT CONTROLS =====
+let isDrag=false,isR=false,prev={x:0,y:0};
+let sph={theta:0.5,phi:0.82,radius:30};
+let pan=new THREE.Vector3(0,5,1);
+let tS={...sph},tP=pan.clone();
+
+function uCam(){
+  camera.position.set(
+    sph.radius*Math.sin(sph.phi)*Math.sin(sph.theta)+pan.x,
+    sph.radius*Math.cos(sph.phi)+pan.y,
+    sph.radius*Math.sin(sph.phi)*Math.cos(sph.theta)+pan.z
+  );camera.lookAt(pan);
+}
+uCam();
+
+const el=R.domElement;
+el.addEventListener('mousedown',e=>{if(e.button===0)isDrag=true;if(e.button===2)isR=true;prev={x:e.clientX,y:e.clientY}});
+el.addEventListener('mousemove',e=>{
+  const dx=e.clientX-prev.x,dy=e.clientY-prev.y;
+  if(isDrag){tS.theta-=dx*0.005;tS.phi=Math.max(0.1,Math.min(Math.PI-0.1,tS.phi+dy*0.005))}
+  if(isR){const r=new THREE.Vector3();camera.getWorldDirection(r);r.cross(new THREE.Vector3(0,1,0)).normalize();tP.add(r.multiplyScalar(-dx*0.03));tP.y+=dy*0.03}
+  prev={x:e.clientX,y:e.clientY};
+});
+addEventListener('mouseup',()=>{isDrag=false;isR=false});
+el.addEventListener('contextmenu',e=>e.preventDefault());
+el.addEventListener('wheel',e=>{tS.radius=Math.max(6,Math.min(55,tS.radius+e.deltaY*0.02))});
+
+let tDist=null;
+el.addEventListener('touchstart',e=>{
+  if(e.touches.length===1){isDrag=true;prev={x:e.touches[0].clientX,y:e.touches[0].clientY}}
+  else if(e.touches.length===2){isDrag=false;const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY;tDist=Math.sqrt(dx*dx+dy*dy)}
+});
+el.addEventListener('touchmove',e=>{
+  e.preventDefault();
+  if(e.touches.length===1&&isDrag){const dx=e.touches[0].clientX-prev.x,dy=e.touches[0].clientY-prev.y;tS.theta-=dx*0.005;tS.phi=Math.max(0.1,Math.min(Math.PI-0.1,tS.phi+dy*0.005));prev={x:e.touches[0].clientX,y:e.touches[0].clientY}}
+  else if(e.touches.length===2&&tDist){const dx=e.touches[0].clientX-e.touches[1].clientX,dy=e.touches[0].clientY-e.touches[1].clientY,nd=Math.sqrt(dx*dx+dy*dy);tS.radius=Math.max(6,Math.min(55,tS.radius-(nd-tDist)*0.05));tDist=nd}
+},{passive:false});
+el.addEventListener('touchend',()=>{isDrag=false;tDist=null});
+
+const V={
+  persp:{theta:0.5,phi:0.82,radius:30,pan:new THREE.Vector3(0,5,1)},
+  front:{theta:0,phi:1.15,radius:28,pan:new THREE.Vector3(0,5,1)},
+  side:{theta:Math.PI/2,phi:1.15,radius:28,pan:new THREE.Vector3(0,5,1)},
+  top:{theta:0,phi:0.05,radius:26,pan:new THREE.Vector3(0,0,1)},
+  back:{theta:Math.PI,phi:0.95,radius:20,pan:new THREE.Vector3(0,3,3)},
+};
+document.querySelectorAll('.vb').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.vb').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const v=V[b.dataset.v];tS={theta:v.theta,phi:v.phi,radius:v.radius};tP=v.pan.clone();
+  });
+});
+
+// Tooltip
+const ray=new THREE.Raycaster(),mse=new THREE.Vector2(),tip=document.getElementById('tip');
+el.addEventListener('mousemove',e=>{
+  mse.x=(e.clientX/innerWidth)*2-1;mse.y=-(e.clientY/innerHeight)*2+1;
+  ray.setFromCamera(mse,camera);
+  const h=ray.intersectObjects(LO);
+  if(h.length>0&&h[0].object.userData.label){
+    tip.style.display='block';tip.textContent=h[0].object.userData.label;
+    tip.style.left=(e.clientX+14)+'px';tip.style.top=(e.clientY-8)+'px';
+    document.body.style.cursor='pointer';
+  }else{tip.style.display='none';document.body.style.cursor='grab'}
+});
+
+// Animate
+function anim(){
+  requestAnimationFrame(anim);
+  const L=0.07;
+  sph.theta+=(tS.theta-sph.theta)*L;
+  sph.phi+=(tS.phi-sph.phi)*L;
+  sph.radius+=(tS.radius-sph.radius)*L;
+  pan.lerp(tP,L);
+  uCam();
+  const p=Math.sin(Date.now()*0.003)*0.1+0.9;
+  M.pcA.emissiveIntensity=0.15*p;
+  M.cA.emissiveIntensity=0.1*p;
+  M.led.emissiveIntensity=0.35+Math.sin(Date.now()*0.002)*0.08;
+  R.render(scene,camera);
+}
+anim();
+
+addEventListener('resize',()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  R.setSize(innerWidth,innerHeight);
+});
+</script>
+</body>
+</html>
