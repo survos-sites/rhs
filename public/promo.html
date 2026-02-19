@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Museado ScanStation — Turnkey Digitization for Museums & Archives</title>
+    <title>Museado ScanStation — Hybrid Edge + Cloud Digitization</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -17,6 +17,10 @@
             --mist: #e8e6e1;
             --success: #2d6a4f;
             --info: #1e6091;
+            --cloud: #2563eb;
+            --cloud-light: #dbeafe;
+            --edge: #7c3aed;
+            --edge-light: #ede9fe;
         }
 
         * {
@@ -33,7 +37,6 @@
             font-size: 17px;
         }
 
-        /* Utility */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -81,6 +84,7 @@
         .hero {
             padding: 6rem 0 4rem;
             text-align: center;
+            background: linear-gradient(180deg, var(--paper) 0%, #fff 100%);
         }
 
         .hero-badge {
@@ -128,10 +132,10 @@
             color: var(--slate);
         }
 
-        /* Workflow Section */
-        .workflow-section {
+        /* Architecture Section */
+        .architecture-section {
             padding: 5rem 0;
-            background: linear-gradient(180deg, var(--paper) 0%, #fff 100%);
+            background: #fff;
         }
 
         .section-header {
@@ -153,7 +157,117 @@
             margin: 0 auto;
         }
 
-        /* Pipeline Graphic */
+        .arch-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .arch-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .arch-card {
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .arch-card.edge {
+            background: var(--edge-light);
+            border: 2px solid var(--edge);
+        }
+
+        .arch-card.cloud {
+            background: var(--cloud-light);
+            border: 2px solid var(--cloud);
+        }
+
+        .arch-card h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .arch-card.edge h3 {
+            color: var(--edge);
+        }
+
+        .arch-card.cloud h3 {
+            color: var(--cloud);
+        }
+
+        .arch-badge {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .arch-card.edge .arch-badge {
+            background: var(--edge);
+            color: #fff;
+        }
+
+        .arch-card.cloud .arch-badge {
+            background: var(--cloud);
+            color: #fff;
+        }
+
+        .arch-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .arch-list li {
+            padding: 0.6rem 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .arch-list li::before {
+            content: '✓';
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .arch-card.edge .arch-list li::before {
+            color: var(--edge);
+        }
+
+        .arch-card.cloud .arch-list li::before {
+            color: var(--cloud);
+        }
+
+        .arch-note {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--slate);
+        }
+
+        /* Pipeline Section */
+        .pipeline-section {
+            padding: 5rem 0;
+            background: linear-gradient(180deg, var(--paper) 0%, #fff 100%);
+        }
+
         .pipeline {
             background: #fff;
             border: 1px solid var(--mist);
@@ -167,7 +281,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            min-width: 900px;
+            min-width: 1100px;
             gap: 1rem;
         }
 
@@ -216,6 +330,25 @@
             letter-spacing: 0.05em;
         }
 
+        .stage-location {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+        }
+
+        .stage-location.edge {
+            background: var(--edge-light);
+            color: var(--edge);
+        }
+
+        .stage-location.cloud {
+            background: var(--cloud-light);
+            color: var(--cloud);
+        }
+
         .stage-items {
             list-style: none;
             font-size: 0.9rem;
@@ -224,30 +357,9 @@
 
         .stage-items li {
             padding: 0.3rem 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
         }
 
-        .stage-items li::before {
-            content: '•';
-            color: var(--accent);
-        }
-
-        /* Detailed Workflow Diagram */
-        .workflow-diagram {
-            margin: 4rem 0 2rem;
-        }
-
-        .diagram-svg {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        /* Features Grid */
+        /* Features Section */
         .features-section {
             padding: 5rem 0;
             background: var(--ink);
@@ -301,39 +413,59 @@
             line-height: 1.6;
         }
 
-        /* Package Section */
-        .package-section {
+        .feature-badge {
+            display: inline-block;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.5rem;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .feature-badge.edge {
+            background: var(--edge);
+            color: #fff;
+        }
+
+        .feature-badge.cloud {
+            background: var(--cloud);
+            color: #fff;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
             padding: 5rem 0;
         }
 
-        .package-grid {
+        .pricing-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             margin-top: 3rem;
-            align-items: start;
         }
 
-        @media (max-width: 768px) {
-            .package-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .package-card {
+        .pricing-card {
             background: #fff;
             border: 2px solid var(--mist);
             border-radius: 1rem;
             padding: 2.5rem;
+            transition: all 0.3s;
         }
 
-        .package-card.featured {
+        .pricing-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .pricing-card.featured {
             border-color: var(--accent);
             position: relative;
         }
 
-        .package-card.featured::before {
-            content: 'Complete Package';
+        .pricing-card.featured::before {
+            content: 'Most Popular';
             position: absolute;
             top: -0.75rem;
             left: 2rem;
@@ -347,33 +479,39 @@
             letter-spacing: 0.03em;
         }
 
-        .package-card h3 {
+        .pricing-card h3 {
             font-family: 'DM Serif Display', serif;
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
         }
 
-        .package-price {
+        .pricing-price {
             font-family: 'IBM Plex Mono', monospace;
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 500;
             color: var(--accent);
             margin: 1rem 0;
         }
 
-        .package-price span {
+        .pricing-price span {
             font-size: 1rem;
             color: var(--slate);
         }
 
-        .package-list {
+        .pricing-period {
+            font-size: 0.9rem;
+            color: var(--slate);
+            margin-bottom: 1rem;
+        }
+
+        .pricing-list {
             list-style: none;
             margin: 1.5rem 0;
             border-top: 1px solid var(--mist);
             padding-top: 1.5rem;
         }
 
-        .package-list li {
+        .pricing-list li {
             padding: 0.6rem 0;
             display: flex;
             align-items: flex-start;
@@ -381,20 +519,11 @@
             font-size: 0.95rem;
         }
 
-        .package-list li::before {
+        .pricing-list li::before {
             content: '✓';
             color: var(--success);
             font-weight: 600;
             flex-shrink: 0;
-        }
-
-        .package-note {
-            font-size: 0.85rem;
-            color: var(--slate);
-            font-style: italic;
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--mist);
         }
 
         /* Hardware Specs */
@@ -516,7 +645,7 @@
         <div class="container header-inner">
             <a href="#" class="logo">Museado<span>.</span></a>
             <nav>
-                <a href="#workflow">How It Works</a>
+                <a href="#architecture">Architecture</a>
                 <a href="#features">Features</a>
                 <a href="#pricing">Pricing</a>
                 <a href="mailto:tac@museado.org">Contact</a>
@@ -526,203 +655,115 @@
 
     <section class="hero">
         <div class="container">
-            <span class="hero-badge">Turnkey Digitization Platform</span>
-            <h1>From shoebox to searchable archive in one day</h1>
-            <p class="hero-sub">ScanStation is a complete hardware + software + AI package that transforms how small museums and historical societies digitize their collections.</p>
-            <div class="hero-price">$4,995</div>
-            <p class="hero-price-note">Includes hardware, software, on-site training & one year support</p>
+            <span class="hero-badge">Hybrid Edge + Cloud Platform</span>
+            <h1>Smart scanning that grows with you</h1>
+            <p class="hero-sub">ScanStation combines affordable edge hardware with powerful cloud AI. Scan locally, let the cloud do the thinking.</p>
+            <div class="hero-price">From $99/month</div>
+            <p class="hero-price-note">Plus $1,499 edge hardware (one-time)</p>
         </div>
     </section>
 
-    <section class="workflow-section" id="workflow">
+    <section class="architecture-section" id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <h2>How It Works</h2>
+                <p class="section-sub">Two parts working together: cheap edge hardware for capture, powerful cloud for AI.</p>
+            </div>
+
+            <div class="arch-grid">
+                <div class="arch-card edge">
+                    <span class="arch-badge">Edge</span>
+                    <h3>📷 Scanner Station</h3>
+                    <p>Runs on modest hardware at your location. Handles the physical scanning and initial processing.</p>
+                    <ul class="arch-list">
+                        <li>Camera capture + live preview</li>
+                        <li>Python-based image cropping</li>
+                        <li>Barcode/QR detection</li>
+                        <li>Audio transcription (Whisper)</li>
+                        <li>Foot pedal + button triggers</li>
+                        <li>Publishes to cloud via secure tunnel</li>
+                    </ul>
+                    <p class="arch-note">💡 <strong>Works offline:</strong> Captures continue even if internet goes down. Queued for upload when connection restores.</p>
+                </div>
+
+                <div class="arch-card cloud">
+                    <span class="arch-badge">Cloud</span>
+                    <h3>☁️ Cloud Hub</h3>
+                    <p>Powerful AI and storage services. Processes, enriches, and indexes your scans.</p>
+                    <ul class="arch-list">
+                        <li>AI keyword generation (vision models)</li>
+                        <li>LLM-powered descriptions & summaries</li>
+                        <li>Sensitive content detection</li>
+                        <li>Long-term cloud storage</li>
+                        <li>Semantic search (Meilisearch)</li>
+                        <li>MCP endpoints (coming soon)</li>
+                    </ul>
+                    <p class="arch-note">🔒 <strong>Secure:</strong> Your data is encrypted at rest and in transit. Access controls and audit logs included.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pipeline-section" id="pipeline">
         <div class="container">
             <div class="section-header">
                 <h2>The Pipeline</h2>
-                <p class="section-sub">Four stages transform physical artifacts into structured, searchable digital assets—with AI doing the heavy lifting.</p>
+                <p class="section-sub">Where the work happens: edge captures, cloud enriches.</p>
             </div>
 
             <div class="pipeline">
                 <div class="pipeline-stages">
                     <div class="pipeline-stage">
                         <div class="stage-icon">📥</div>
-                        <div class="stage-label">Input</div>
+                        <div class="stage-label">Capture</div>
+                        <span class="stage-location edge">Edge</span>
                         <ul class="stage-items">
-                            <li>Overhead scanner</li>
-                            <li>Sheet-fed scanner</li>
-                            <li>Smartphone camera</li>
-                            <li>Audio recorder</li>
+                            <li>Camera frame grab</li>
+                            <li>Foot pedal trigger</li>
+                            <li>Barcode/QR read</li>
                         </ul>
                     </div>
                     <div class="pipeline-stage">
-                        <div class="stage-icon">🔍</div>
-                        <div class="stage-label">Pre-Process</div>
+                        <div class="stage-icon">✂️</div>
+                        <div class="stage-label">Crop</div>
+                        <span class="stage-location edge">Edge</span>
                         <ul class="stage-items">
-                            <li>Barcode/QR detection</li>
-                            <li>Accession ID extraction</li>
-                            <li>Directive parsing</li>
-                            <li>Image optimization</li>
+                            <li>Python image processing</li>
+                            <li>Auto-deskew</li>
+                            <li>Format optimization</li>
+                        </ul>
+                    </div>
+                    <div class="pipeline-stage">
+                        <div class="stage-icon">🎙️</div>
+                        <div class="stage-label">Transcribe</div>
+                        <span class="stage-location edge">Edge</span>
+                        <ul class="stage-items">
+                            <li>Whisper audio capture</li>
+                            <li>Local transcription</li>
+                            <li>Stream to cloud</li>
                         </ul>
                     </div>
                     <div class="pipeline-stage">
                         <div class="stage-icon">🧠</div>
-                        <div class="stage-label">AI Analysis</div>
+                        <div class="stage-label">AI Enrich</div>
+                        <span class="stage-location cloud">Cloud</span>
                         <ul class="stage-items">
-                            <li>Keyword generation</li>
-                            <li>NSFW flagging</li>
-                            <li>OCR + summarization</li>
-                            <li>Audio transcription</li>
-<!--                            <li>Translation</li>-->
+                            <li>Vision keyword extraction</li>
+                            <li>LLM summarization</li>
+                            <li>NSFW detection</li>
                         </ul>
                     </div>
                     <div class="pipeline-stage">
-                        <div class="stage-icon">📤</div>
-                        <div class="stage-label">Output</div>
+                        <div class="stage-icon">🔍</div>
+                        <div class="stage-label">Search</div>
+                        <span class="stage-location cloud">Cloud</span>
                         <ul class="stage-items">
-                            <li>Structured metadata</li>
-                            <li>Searchable archive</li>
-                            <li>Dublin Core export</li>
-                            <li>Optional Collection website</li>
+                            <li>Semantic indexing</li>
+                            <li>Full-text search</li>
+                            <li>MCP endpoints (soon)</li>
                         </ul>
                     </div>
                 </div>
-            </div>
-
-            <!-- Detailed SVG Diagram -->
-            <div class="workflow-diagram">
-                <svg class="diagram-svg" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Background -->
-                    <rect width="1000" height="500" fill="#fdfcfa"/>
-
-                    <!-- Stage backgrounds -->
-                    <rect x="20" y="80" width="220" height="380" rx="12" fill="#f8f6f1" stroke="#e8e6e1" stroke-width="2"/>
-                    <rect x="270" y="80" width="200" height="380" rx="12" fill="#f8f6f1" stroke="#e8e6e1" stroke-width="2"/>
-                    <rect x="500" y="80" width="220" height="380" rx="12" fill="#fff5f0" stroke="#c45a3b" stroke-width="2" stroke-dasharray="4"/>
-                    <rect x="750" y="80" width="230" height="380" rx="12" fill="#f0f7f4" stroke="#2d6a4f" stroke-width="2"/>
-
-                    <!-- Stage labels -->
-                    <text x="130" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#4a5568" letter-spacing="0.1em">INPUT</text>
-                    <text x="370" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#4a5568" letter-spacing="0.1em">PRE-PROCESS</text>
-                    <text x="610" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#c45a3b" letter-spacing="0.1em">AI ANALYSIS</text>
-                    <text x="865" y="50" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="14" fill="#2d6a4f" letter-spacing="0.1em">OUTPUT</text>
-
-                    <!-- Input devices -->
-                    <g transform="translate(60, 110)">
-                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
-                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📷 Overhead</text>
-                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">VIISAN K48</text>
-                    </g>
-                    <g transform="translate(60, 185)">
-                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
-                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📄 Sheet Feeder</text>
-                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">ADF Scanner</text>
-                    </g>
-                    <g transform="translate(60, 260)">
-                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
-                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📱 Smartphone</text>
-                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">iOS / Android</text>
-                    </g>
-                    <g transform="translate(60, 335)">
-                        <rect width="140" height="60" rx="8" fill="#fff" stroke="#e8e6e1" stroke-width="1.5"/>
-                        <text x="70" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🎙️ Audio</text>
-                        <text x="70" y="45" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" fill="#4a5568">Oral Histories</text>
-                    </g>
-
-                    <!-- Pre-process items -->
-                    <g transform="translate(290, 120)">
-                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
-                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Barcode / QR Scan</text>
-                    </g>
-                    <g transform="translate(290, 185)">
-                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
-                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Accession ID Lookup</text>
-                    </g>
-                    <g transform="translate(290, 250)">
-                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
-                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Directive Parsing</text>
-                    </g>
-                    <g transform="translate(290, 315)">
-                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
-                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Deskew / Crop</text>
-                    </g>
-                    <g transform="translate(290, 380)">
-                        <rect width="160" height="50" rx="6" fill="#fff" stroke="#e8e6e1"/>
-                        <text x="80" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">Format Conversion</text>
-                    </g>
-
-                    <!-- AI Analysis items -->
-                    <g transform="translate(520, 110)">
-                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
-                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🏷️ BLIP-2 Keywords</text>
-                    </g>
-                    <g transform="translate(520, 165)">
-                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
-                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🔒 NSFW Detection</text>
-                    </g>
-                    <g transform="translate(520, 220)">
-                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
-                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">📝 OCR + Summary</text>
-                    </g>
-                    <g transform="translate(520, 275)">
-                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
-                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🎧 Whisper Transcribe</text>
-                    </g>
-<!--                    <g transform="translate(520, 330)">-->
-<!--                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>-->
-<!--                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🌐 LibreTranslate</text>-->
-<!--                    </g>-->
-                    <g transform="translate(520, 385)">
-                        <rect width="180" height="45" rx="6" fill="#fff" stroke="#c45a3b" stroke-width="1.5"/>
-                        <text x="90" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-size="12" fill="#1a1a1a">🤖 LLM Enrichment</text>
-                    </g>
-
-                    <!-- Output items -->
-                    <g transform="translate(770, 120)">
-                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
-                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Structured Metadata</text>
-                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">JSON / CSV / XML</text>
-                    </g>
-                    <g transform="translate(770, 190)">
-                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
-                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Searchable Archive</text>
-                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">Meilisearch Index</text>
-                    </g>
-                    <g transform="translate(770, 260)">
-                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
-                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Dublin Core Export</text>
-                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">Standards Compliant</text>
-                    </g>
-                    <g transform="translate(770, 330)">
-                        <rect width="190" height="55" rx="8" fill="#fff" stroke="#2d6a4f" stroke-width="1.5"/>
-                        <text x="95" y="25" text-anchor="middle" font-family="IBM Plex Sans" font-weight="500" font-size="12" fill="#1a1a1a">Collection Website</text>
-                        <text x="95" y="43" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" fill="#4a5568">Public or Private</text>
-                    </g>
-<!--                    <g transform="translate(770, 400)">-->
-<!--                        <rect width="190" height="45" rx="8" fill="#2d6a4f"/>-->
-<!--                        <text x="95" y="28" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="12" fill="#fff">🌍 museado.org</text>-->
-<!--                    </g>-->
-
-                    <!-- Flow arrows -->
-                    <defs>
-                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-                            <polygon points="0 0, 10 3.5, 0 7" fill="#c45a3b"/>
-                        </marker>
-                    </defs>
-
-                    <!-- Arrow from Input to Pre-process -->
-                    <path d="M 210 270 L 280 270" stroke="#c45a3b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-
-                    <!-- Arrow from Pre-process to AI -->
-                    <path d="M 460 270 L 510 270" stroke="#c45a3b" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-
-                    <!-- Arrow from AI to Output -->
-                    <path d="M 710 270 L 760 270" stroke="#2d6a4f" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
-
-                    <!-- "All Local" badge -->
-                    <g transform="translate(540, 440)">
-                        <rect width="140" height="30" rx="15" fill="#c45a3b"/>
-                        <text x="70" y="20" text-anchor="middle" font-family="IBM Plex Sans" font-weight="600" font-size="11" fill="#fff">🔐 100% LOCAL AI</text>
-                    </g>
-                </svg>
             </div>
         </div>
     </section>
@@ -730,133 +771,148 @@
     <section class="features-section" id="features">
         <div class="container">
             <div class="section-header">
-                <h2>Built for Small Institutions</h2>
-                <p class="section-sub">No cloud subscriptions. No IT department required. No ongoing fees.</p>
+                <h2>Features</h2>
+                <p class="section-sub">What each component brings to your digitization workflow.</p>
             </div>
 
             <div class="features-grid">
                 <div class="feature-card">
-                    <div class="feature-icon">🔐</div>
-                    <h3>100% Local Processing</h3>
-                    <p>All AI runs on the included workstation. Sensitive materials never leave your building. No internet required for scanning.</p>
+                    <div class="feature-icon">📷</div>
+                    <h3>Live Preview <span class="feature-badge edge">Edge</span></h3>
+                    <p>Real-time camera feed with whole-mat and cropped views. See exactly what you'll capture before you scan.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">📦</div>
-                    <h3>Barcode Workflow</h3>
-                    <p>Print QR codes with accession numbers. Scan the code, scan the object—metadata links automatically. Batch hundreds of items per hour.</p>
+                    <div class="feature-icon">✂️</div>
+                    <h3>Python Cropping <span class="feature-badge edge">Edge</span></h3>
+                    <p>Automatic document detection and cropping. Detects edges, corrects perspective, outputs clean images.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🏷️</div>
-                    <h3>AI-Generated Keywords</h3>
-                    <p>Vision models automatically describe image contents: "black and white photograph, woman, 1940s dress, standing, house exterior."</p>
+                    <h3>AI Keywords <span class="feature-badge cloud">Cloud</span></h3>
+                    <p>Vision models analyze images and generate descriptive keywords: "vintage photograph, family portrait, 1950s."</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3>LLM Enrichment <span class="feature-badge cloud">Cloud</span></h3>
+                    <p>Large language models generate summaries, contextual descriptions, and metadata enhancements.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
-                    <h3>Sensitive Content Flagging</h3>
-                    <p>Automatic detection of nudity and potentially sensitive imagery. Flag for review before public access—protect your institution.</p>
+                    <h3>Content Flagging <span class="feature-badge cloud">Cloud</span></h3>
+                    <p>Automatic detection of sensitive content. Flag for review before public access—protect your institution.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🎙️</div>
-                    <h3>Oral History Transcription</h3>
-                    <p>Whisper AI transcribes audio recordings with remarkable accuracy. Searchable text from hours of interviews in minutes.</p>
+                    <h3>Audio Transcription <span class="feature-badge edge">Edge</span></h3>
+                    <p>Whisper AI transcribes oral histories locally. Hours of interviews become searchable text.</p>
                 </div>
-<!--                <div class="feature-card">-->
-<!--                    <div class="feature-icon">🌐</div>-->
-<!--                    <h3>Multi-Language Support</h3>-->
-<!--                    <p>OCR and translation for 200+ languages. Process Spanish land grants, German immigration records, Japanese-American documents.</p>-->
-<!--                </div>-->
                 <div class="feature-card">
                     <div class="feature-icon">🔍</div>
-                    <h3>Semantic Search</h3>
-                    <p>Find "photos of the old mill" even if no record mentions those exact words. AI understands meaning, not just keywords.</p>
+                    <h3>Semantic Search <span class="feature-badge cloud">Cloud</span></h3>
+                    <p>Find "photos of the old mill" even if no record mentions those words. AI understands meaning, not just keywords.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>MCP Endpoints <span class="feature-badge cloud">Soon</span></h3>
+                    <p>Model Context Protocol integration for smart, contextual searching. Connect AI assistants directly to your collection.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📦</div>
+                    <h3>Cloud Storage <span class="feature-badge cloud">Cloud</span></h3>
+                    <p>Secure long-term storage with redundancy. Access your collection from anywhere, any device.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📤</div>
-                    <h3>Standards Export</h3>
-                    <p>Dublin Core, CSV, JSON, JSONL.</p>
+                    <h3>Standards Export <span class="feature-badge cloud">Cloud</span></h3>
+                    <p>Dublin Core, CSV, JSON, JSONL. Export your metadata in standard formats for downstream systems.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="package-section" id="pricing">
+    <section class="pricing-section" id="pricing">
         <div class="container">
             <div class="section-header">
-                <h2>What's Included</h2>
-                <p class="section-sub">Everything you need to start digitizing. No hidden costs.</p>
+                <h2>Pricing</h2>
+                <p class="section-sub">Simple, transparent pricing. No hidden fees.</p>
             </div>
 
-            <div class="package-grid">
-                <div class="package-card featured">
-                    <h3>ScanStation Complete</h3>
-                    <div class="package-price">$4,995 <span>one-time</span></div>
-                    <ul class="package-list">
-                        <li><strong>VIISAN K48 Scanner</strong> — 48MP overhead book scanner with curve-flattening, A3 size capacity</li>
-                        <li><strong>BOSGAME M4 Workstation</strong> — Ryzen 7, 32GB DDR5, 1TB NVMe, Windows 11 Pro</li>
-                        <li><strong>Museado ScanStation Software</strong> — Pre-configured with all AI models, workflow automation, Meilisearch</li>
-                        <li><strong>On-Site Training</strong> — Full day with your team: scanning workflow, metadata best practices, troubleshooting</li>
-                        <li><strong>One Year Support</strong> — Email and video call support, software updates, model improvements</li>
-                        <li><strong>QR Code Starter Kit</strong> — Label printer templates, sample workflows, documentation</li>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="pricing-price">$99 <span>/month</span></div>
+                    <p class="pricing-period">Billed annually</p>
+                    <ul class="pricing-list">
+                        <li>Up to 500 scans/month</li>
+                        <li>10GB cloud storage</li>
+                        <li>AI keyword generation</li>
+                        <li>Semantic search</li>
+                        <li>Email support</li>
                     </ul>
-                    <p class="package-note">Travel expenses additional for on-site training. Remote training available at reduced cost.</p>
                 </div>
 
-                <div class="package-card">
-                    <h3>Hardware Specifications</h3>
-                    <table class="specs-table">
-                        <tr>
-                            <th>Scanner</th>
-                            <td>VIISAN K48 Professional</td>
-                        </tr>
-                        <tr>
-                            <th>Resolution</th>
-                            <td>48MP (600 DPI output)</td>
-                        </tr>
-                        <tr>
-                            <th>Max Size</th>
-                            <td>A3 (11.7" × 16.5")</td>
-                        </tr>
-                        <tr>
-                            <th>Computer</th>
-                            <td>BOSGAME M4 Mini PC</td>
-                        </tr>
-                        <tr>
-                            <th>CPU</th>
-                            <td>AMD Ryzen 7 8745HS (8-core)</td>
-                        </tr>
-                        <tr>
-                            <th>Memory</th>
-                            <td>32GB DDR5</td>
-                        </tr>
-                        <tr>
-                            <th>Storage</th>
-                            <td>1TB NVMe + expansion slot</td>
-                        </tr>
-                        <tr>
-                            <th>Network</th>
-                            <td>Dual 2.5GbE, WiFi 6E</td>
-                        </tr>
-                        <tr>
-                            <th>AI Models</th>
-                            <td>BLIP-2, Whisper, NLLB, NudeNet</td>
-                        </tr>
-                        <tr>
-                            <th>Search</th>
-                            <td>Meilisearch (semantic + keyword)</td>
-                        </tr>
-                    </table>
+                <div class="pricing-card featured">
+                    <h3>Professional</h3>
+                    <div class="pricing-price">$199 <span>/month</span></div>
+                    <p class="pricing-period">Billed annually</p>
+                    <ul class="pricing-list">
+                        <li>Unlimited scans</li>
+                        <li>100GB cloud storage</li>
+                        <li>AI keyword generation</li>
+                        <li>LLM enrichment</li>
+                        <li>Semantic search</li>
+                        <li>MCP endpoints</li>
+                        <li>Priority support</li>
+                    </ul>
                 </div>
+
+                <div class="pricing-card">
+                    <h3>Institution</h3>
+                    <div class="pricing-price">Custom</div>
+                    <p class="pricing-period">Contact for pricing</p>
+                    <ul class="pricing-list">
+                        <li>Unlimited scans</li>
+                        <li>Multi-station support</li>
+                        <li>Custom storage</li>
+                        <li>SSO/SAML integration</li>
+                        <li>Dedicated support</li>
+                        <li>On-premise options</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="margin-top: 3rem; text-align: center;">
+                <h3 style="font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 1rem;">Hardware (One-Time)</h3>
+                <p style="color: var(--slate); max-width: 600px; margin: 0 auto;">The edge station is a modest investment—it's just a camera, computer, and pedal. No expensive scanning equipment required.</p>
+                <table class="specs-table" style="max-width: 500px; margin: 1.5rem auto 0;">
+                    <tr>
+                        <th>Recommended Hardware</th>
+                        <td>~$1,499 total</td>
+                    </tr>
+                    <tr>
+                        <th>Camera</th>
+                        <td>48MP overhead scanner or high-res webcam</td>
+                    </tr>
+                    <tr>
+                        <th>Computer</th>
+                        <td>Any modern mini PC (Ryzen 5+ or equivalent)</td>
+                    </tr>
+                    <tr>
+                        <th>Storage</th>
+                        <td>512GB local SSD (expandable)</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </section>
 
     <section class="cta-section">
         <div class="container">
-            <h2>Ready to make your collection discoverable?</h2>
-            <p class="section-sub">The Museado Foundation is a 501(c)(3) nonprofit. We exist to help small cultural institutions preserve and share their holdings.</p>
+            <h2>Ready to modernize your digitization?</h2>
+            <p class="section-sub">Start with an edge station. Add cloud AI when you're ready.</p>
             <div class="cta-buttons">
-                <a href="mailto:tacman@gmail.com?subject=ScanStation%20Inquiry" class="btn btn-primary">Request a Demo</a>
-                <a href="https://museado.org" class="btn btn-secondary">Learn About Museado</a>
+                <a href="mailto:tacman@gmail.com?subject=ScanStation%20Demo" class="btn btn-primary">Request a Demo</a>
+                <a href="mailto:tac@museado.org?subject=ScanStation%20Pricing" class="btn btn-secondary">Get a Quote</a>
             </div>
         </div>
     </section>
