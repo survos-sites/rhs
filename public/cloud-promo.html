@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScanStationAI — Museum Digitization Made Simple</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a1a;
+            --paper: #f8f6f1;
+            --accent: #c45a3b;
+            --accent-light: #e8d4c8;
+            --slate: #4a5568;
+            --mist: #e8e6e1;
+            --success: #2d6a4f;
+            --info: #1e6091;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            font-size: 17px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--mist);
+        }
+
+        .header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.5rem;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav a {
+            color: var(--slate);
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .hero {
+            padding: 5rem 0 4rem;
+            text-align: center;
+            background: linear-gradient(180deg, var(--paper) 0%, #fff 100%);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .hero-location {
+            font-size: 0.9rem;
+            color: var(--slate);
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(2rem, 5vw, 3.25rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 1.25rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            color: var(--slate);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.9rem 1.75rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #a84832;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: var(--ink);
+            border: 2px solid var(--ink);
+        }
+
+        .btn-secondary:hover {
+            background: var(--ink);
+            color: #fff;
+        }
+
+        .problem-section {
+            padding: 4rem 0;
+            background: var(--ink);
+            color: #fff;
+        }
+
+        .problem-section h2 {
+            color: #fff;
+            margin-bottom: 1.5rem;
+        }
+
+        .problem-list {
+            max-width: 700px;
+        }
+
+        .problem-list li {
+            padding: 0.75rem 0;
+            padding-left: 1rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .solution-section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-sub {
+            color: var(--slate);
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        .solution-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .solution-card {
+            background: #fff;
+            border: 1px solid var(--mist);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .solution-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .solution-card p {
+            color: var(--slate);
+            font-size: 0.95rem;
+        }
+
+        .process-section {
+            padding: 4rem 0;
+            background: linear-gradient(180deg, var(--paper) 0%, #fff 100%);
+        }
+
+        .process-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .process-step {
+            display: flex;
+            gap: 1.25rem;
+            align-items: flex-start;
+        }
+
+        .step-num {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .step-content h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content p {
+            color: var(--slate);
+            font-size: 0.9rem;
+        }
+
+        .options-section {
+            padding: 4rem 0;
+            background: var(--accent-light);
+        }
+
+        .options-section h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .options-section .section-sub {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .option-card {
+            background: #fff;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .option-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--ink);
+        }
+
+        .option-card p {
+            color: var(--slate);
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .option-card .cost {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--success);
+            font-weight: 500;
+            padding: 0.5rem;
+            background: #f0fdf4;
+            border-radius: 0.25rem;
+            display: inline-block;
+        }
+
+        .cta-section {
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .cta-email {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--accent);
+            margin-top: 1rem;
+        }
+
+        .cta-section .deadline {
+            font-size: 0.9rem;
+            color: var(--slate);
+            margin-top: 0.5rem;
+        }
+
+        footer {
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--mist);
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-text {
+            color: var(--slate);
+            font-size: 0.9rem;
+        }
+
+        .footer-text a {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="#" class="logo">ScanStation<span>AI</span></a>
+            <nav>
+                <a href="#problem">The Problem</a>
+                <a href="#solution">How It Works</a>
+                <a href="#options">Ways to Partner</a>
+                <a href="mailto:tac@museado.org">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <span class="hero-badge">From the Museado Foundation</span>
+            <p class="hero-location">Based in Sperryville, Virginia — we serve DC, Maryland, and Virginia</p>
+            <h1>Your collection deserves to be found</h1>
+            <p class="hero-sub">A digitization system designed for small museums and archives. Simple enough for an intern, powerful enough to make your collection searchable by anyone.</p>
+            <a href="mailto:tac@museado.org?subject=ScanStationAI%20Partner" class="btn btn-primary">Get in Touch</a>
+        </div>
+    </section>
+
+    <section class="problem-section" id="problem">
+        <div class="container">
+            <h2>The Problem</h2>
+            <ul class="problem-list">
+                <li>Millions of irreplaceable documents — photographs, deeds, letters, oral histories — are deteriorating in boxes in basements and closets.</li>
+                <li>Commercial digitization services are expensive. Most small museums can't afford them.</li>
+                <li>Staff with technical skills are rare. Volunteers who know the collection are aging out.</li>
+                <li>Grants exist, but digitization isn't just buying a scanner — it's a whole system. Outside firms charge too much for a shoebox of donated photos. We help you do it yourself.</li>
+                <li>Even when collections are digitized, they're often hidden — no searchable website, no discoverability.</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="solution-section" id="solution">
+        <div class="container">
+            <div class="section-header">
+                <h2>How ScanStationAI Works</h2>
+                <p class="section-sub">Two parts: a simple scanner at your site, powerful AI in the cloud.</p>
+            </div>
+
+            <div class="solution-grid">
+                <div class="solution-card">
+                    <h3>📷 The Scanner</h3>
+                    <p>High-resolution overhead camera. Place your document, press a pedal, done. Non-destructive — nothing gets pressed flat. Handles photos, books, letters, maps.</p>
+                </div>
+
+                <div class="solution-card">
+                    <h3>🔌 Simple Setup</h3>
+                    <p>Scanner and processing box connect to power and your network. We will come to you to demo, train, and discuss grant possibilities.</p>
+                </div>
+
+                <div class="solution-card">
+                    <h3>🧠 AI Assists, Humans Add Context</h3>
+                    <p>Our cloud system reads handwriting, suggests titles and keywords. But only your staff knows who donated it, what the photograph shows, the story behind it. They add that context — and can even voice-record notes while scanning.</p>
+                </div>
+
+                <div class="solution-card">
+                    <h3>🔍 Discoverable Results</h3>
+                    <p>Your collection becomes searchable — by keyword, by meaning, by date. Export in standard formats. Publish to your website.</p>
+                </div>
+
+                <div class="solution-card">
+                    <h3>🚗 We Come to You</h3>
+                    <p>We're based in Sperryville, VA. We drive to your location for installation and training. No shipping equipment back and forth.</p>
+                </div>
+
+                <div class="solution-card">
+                    <h3>💰 Grant Funding Covers It</h3>
+                    <p>Grants can pay for professional scanning help. We also help draft the technical sections of your grant application.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="process-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>What the Operator Does</h2>
+                <p class="section-sub">Human expertise + AI assistance. The operator knows the collection; the system helps organize it.</p>
+            </div>
+
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>Organize</h3>
+                        <p>Decide the workflow — what types of items go where, how they should be tagged. You know your collection best.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>Scan</h3>
+                        <p>Place item on the mat, press the pedal. That's it. Fast, consistent, anyone can do it.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h3>Review & Enrich</h3>
+                        <p>AI suggests titles and keywords. You add the context the AI couldn't know — who donated it, what's in the photo, the story behind it.</p>
+                    </div>
+                </div>
+                <div class="process-step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h3>Share</h3>
+                        <p>Export in standard formats. Publish. Your collection is now discoverable by researchers, genealogists, and the public.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="options-section" id="options">
+        <div class="container">
+            <div class="section-header">
+                <h2>Ways to Partner</h2>
+                <p class="section-sub">Three options, from least commitment to most.</p>
+            </div>
+
+            <div class="options-grid">
+                <div class="option-card">
+                    <h3>Option 1: Pilot Site (No Cost to You)</h3>
+                    <p>We're applying for an IMLS National Leadership Grant. Your institution could be named as a pilot site — all we need is a one-paragraph letter of support.</p>
+                    <p>We'll digitize a portion of your collection as a proof of concept, working out the kinks in our system. This gives you a working demo you can use to apply for your own grant to finish the job.</p>
+                    <span class="cost">Your cost: A letter of support</span>
+                </div>
+
+                <div class="option-card">
+                    <h3>Option 2: Virginia Humanities Grant</h3>
+                    <p>You apply for a <a href="https://virginiahumanities.org/grants/regular-grants/">Virginia Humanities Regular Grant</a> ($3,500–$15,000). Museado Foundation is the paid contractor providing technology and support.</p>
+                    <p>Grants can fund professional scanning help. Volunteer hours and facility use cover the cost share — no cash required from you.</p>
+                    <span class="cost">LOI due March 13 • Full app due April 17</span>
+                </div>
+
+                <div class="option-card">
+                    <h3>Option 3: IMLS Inspire! Grant</h3>
+                    <p>Federal <a href="https://www.imls.gov/find-funding/funding-opportunities/grant-programs/inspire-grants-for-small-museums">IMLS Inspire! Grant</a> up to $75,000 specifically for small museums. Funds technology, digitization, and capacity building.</p>
+                    <p>Requests under $25,000 require no cost share at all. This could fund real change — paid scanning help and meaningful operational growth.</p>
+                    <span class="cost">Due March 13 • Up to $75,000</span>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 2rem; color: var(--slate);">We can handle most of the paperwork. No pressure — just want to make sure you know all your options.</p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Interested?</h2>
+            <p>We're looking for 2-3 pilot partners in the DC/Maryland/Virginia area. Even if you have no budget, Option 1 could get you digitized for free.</p>
+            <a href="mailto:tac@museado.org?subject=ScanStationAI%20Partner" class="btn btn-primary">Let's Talk</a>
+            <p class="cta-email">tac@museado.org</p>
+            <p class="deadline">March 13 grant deadline — reach out soon if interested!</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-logo">Museado Foundation</div>
+            <p class="footer-text">A 501(c)(3) nonprofit — making cultural heritage accessible to everyone.<br>
+            <a href="https://museado.org">museado.org</a> · <a href="mailto:tac@museado.org">tac@museado.org</a></p>
+        </div>
+    </footer>
+</body>
+</html>
