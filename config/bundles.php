@@ -18,7 +18,6 @@ return [
     Survos\EzBundle\SurvosEzBundle::class => ['all' => true],
     Survos\ImportBundle\SurvosImportBundle::class => ['all' => true],
     Survos\JsonlBundle\SurvosJsonlBundle::class => ['all' => true],
-    Survos\CoreBundle\SurvosCoreBundle::class => ['all' => true],
     Survos\MeiliBundle\SurvosMeiliBundle::class => ['all' => true],
     Survos\CodeBundle\SurvosCodeBundle::class => ['dev' => true, 'test' => true],
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
@@ -27,4 +26,7 @@ return [
     Survos\DeploymentBundle\SurvosDeploymentBundle::class => ['dev' => true, 'test' => true],
     Survos\MediaBundle\SurvosMediaBundle::class => ['all' => true],
     Inspector\Symfony\Bundle\InspectorBundle::class => ['all' => true],
+    Survos\AtlasBundle\SurvosAtlasBundle::class => ['all' => true],
+    Survos\Kit\SurvosKitBundle::class => ['all' => true],
+    Survos\FieldBundle\SurvosFieldBundle::class => ['all' => true],
 ];
